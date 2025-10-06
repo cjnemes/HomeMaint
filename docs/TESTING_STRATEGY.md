@@ -60,9 +60,14 @@ We follow the testing pyramid principle:
 
 **E2E Testing:**
 - **Playwright** - End-to-end testing
-- Cross-browser support
+- **Playwright MCP** - Browser automation via Claude Code
+  - Enables autonomous E2E testing without manual intervention
+  - Can navigate pages, fill forms, click buttons, verify UI
+  - Can capture screenshots for visual verification
+  - Runs headlessly for automated testing
+- Cross-browser support (Chrome, Firefox, Safari, Mobile)
 - Parallel execution
-- Built-in test recorder
+- **Critical for autonomous development**: Full UI testing automation
 
 **Code Coverage:**
 - **c8** (built into Vitest) - Coverage reporting

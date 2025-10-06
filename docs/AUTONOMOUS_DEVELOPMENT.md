@@ -80,10 +80,15 @@ This document outlines how development will proceed autonomously with Claude han
 - Test behavior, not implementation
 - **Why**: Verify components work without browser
 
-**E2E Tests: Playwright**
-- Headless browser testing
-- Cross-browser support
-- **Why**: Can verify full user flows automatically
+**E2E Tests: Playwright + Playwright MCP**
+- Headless browser testing via Playwright
+- Browser automation via Playwright MCP (Claude Code integration)
+  - Navigate pages, fill forms, click buttons
+  - Verify UI elements and text content
+  - Capture screenshots for visual verification
+  - Test responsive design across devices
+- Cross-browser support (Chrome, Firefox, Safari, Mobile)
+- **Why**: Can verify full user flows and visual output autonomously
 
 **Coverage: c8 (built into Vitest)**
 - Track code coverage
