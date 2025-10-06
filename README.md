@@ -22,13 +22,50 @@ HomeMaint is designed to be your single source of truth for all home-related inf
 
 ## Project Status
 
-**Current Phase**: Planning & Documentation
+**Current Phase**: Week 1 - Project Setup ✅
 
-This project is currently in the planning phase. Core documentation has been completed and we're preparing to begin development.
+Week 1 project setup is complete! The development environment, database, and testing infrastructure are fully configured.
+
+**Completed:**
+
+- ✅ Next.js 14 with TypeScript setup
+- ✅ ESLint, Prettier, and code quality tools configured
+- ✅ Tailwind CSS v4 and shadcn/ui integrated
+- ✅ SQLite database with better-sqlite3
+- ✅ Comprehensive testing infrastructure (Vitest, Playwright)
+- ✅ All tests passing (14 tests total)
 
 ## Getting Started
 
-Documentation for getting started will be added as development progresses.
+### Prerequisites
+
+- Node.js 18.17.0 or higher
+- npm
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd HomeMaint
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the development server:
+
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+The database will be automatically created on first run with all necessary tables.
 
 ## Technology Stack
 
@@ -47,12 +84,59 @@ Documentation for getting started will be added as development progresses.
 - Tailwind CSS + shadcn/ui
 - Responsive design (mobile-first)
 
+**Testing:**
+
+- Vitest (unit & integration tests)
+- React Testing Library (component tests)
+- Playwright (E2E tests)
+
 **Deployment:**
 
 - Progressive Web App (PWA)
 - Self-hosted / Local-first
 
 See [Technical Architecture](docs/TECHNICAL_ARCHITECTURE.md) for complete details.
+
+## Development Scripts
+
+```bash
+# Development
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run start            # Start production server
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run lint:fix         # Fix ESLint errors
+npm run format           # Format code with Prettier
+npm run format:check     # Check code formatting
+npm run type-check       # Run TypeScript type checking
+
+# Testing
+npm test                 # Run unit tests (watch mode)
+npm run test:run         # Run unit tests (once)
+npm run test:coverage    # Run tests with coverage
+npm run test:e2e         # Run E2E tests
+npm run test:e2e:ui      # Run E2E tests in UI mode
+npm run test:e2e:debug   # Debug E2E tests
+```
+
+## Database
+
+The application uses SQLite with the following tables:
+
+- **homes**: Property information
+- **categories**: Asset categories (HVAC, Plumbing, etc.)
+- **locations**: Rooms and areas within home
+- **assets**: Systems, appliances, and equipment
+- **service_providers**: Contractor information
+- **maintenance_records**: Historical maintenance
+- **maintenance_tasks**: Scheduled maintenance
+- **attachments**: Photos, manuals, receipts
+
+Database file: `data/homemaint.db` (automatically created, gitignored)
+
+See [Data Model documentation](docs/DATA_MODEL.md) for detailed schema.
 
 ## Development Approach
 
