@@ -1,4 +1,5 @@
 # Component Library & Design System
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -12,6 +13,7 @@
 This document defines the component library and design system for HomeMaint. It serves as a reference for developers building the UI and ensures consistency across the application.
 
 **Design System Goals:**
+
 - **Consistency**: Reusable components with predictable behavior
 - **Accessibility**: WCAG 2.1 AA compliant out of the box
 - **Developer Experience**: Easy to use, well-documented, type-safe
@@ -25,12 +27,14 @@ This document defines the component library and design system for HomeMaint. It 
 ### 2.1 Component Foundation
 
 We'll use **shadcn/ui** as our foundation:
+
 - Unstyled, accessible components from Radix UI
 - Styled with Tailwind CSS
 - Copy/paste into our codebase (not npm installed)
 - Fully customizable and ownable
 
 **Why shadcn/ui?**
+
 - No runtime overhead (no component library dependency)
 - Full control over components
 - Excellent TypeScript support
@@ -94,8 +98,8 @@ export default {
           200: '#bfdbfe',
           300: '#93c5fd',
           400: '#60a5fa',
-          500: '#3b82f6',  // Primary brand color
-          600: '#2563eb',  // Primary dark (default)
+          500: '#3b82f6', // Primary brand color
+          600: '#2563eb', // Primary dark (default)
           700: '#1d4ed8',
           800: '#1e40af',
           900: '#1e3a8a',
@@ -115,13 +119,13 @@ export default {
         },
         // Category colors
         category: {
-          hvac: '#3b82f6',      // Blue
-          plumbing: '#06b6d4',  // Cyan
-          electrical: '#f59e0b',// Amber
-          appliances: '#8b5cf6',// Purple
-          exterior: '#10b981',  // Green
-          roofing: '#ef4444',   // Red
-          other: '#6b7280',     // Gray
+          hvac: '#3b82f6', // Blue
+          plumbing: '#06b6d4', // Cyan
+          electrical: '#f59e0b', // Amber
+          appliances: '#8b5cf6', // Purple
+          exterior: '#10b981', // Green
+          roofing: '#ef4444', // Red
+          other: '#6b7280', // Gray
         },
       },
     },
@@ -263,6 +267,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 ```
 
 **Usage:**
+
 ```tsx
 <Button>Save Asset</Button>
 <Button variant="secondary">Cancel</Button>
@@ -306,6 +311,7 @@ export function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElemen
 ```
 
 **Usage:**
+
 ```tsx
 <Card>
   <CardHeader>
@@ -358,12 +364,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 ```
 
 **Usage:**
+
 ```tsx
-<Input
-  type="text"
-  placeholder="Asset name"
-  error={errors.name?.message}
-/>
+<Input type="text" placeholder="Asset name" error={errors.name?.message} />
 ```
 
 ### 4.4 Select (Dropdown)
@@ -395,6 +398,7 @@ export const SelectTrigger = forwardRef<...>(({ className, children, ...props },
 ```
 
 **Usage:**
+
 ```tsx
 <Select value={category} onValueChange={setCategory}>
   <SelectTrigger>
@@ -444,14 +448,13 @@ export const DialogDescription = DialogPrimitive.Description;
 ```
 
 **Usage:**
+
 ```tsx
 <Dialog open={isOpen} onOpenChange={setIsOpen}>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Delete Asset</DialogTitle>
-      <DialogDescription>
-        Are you sure you want to delete this asset?
-      </DialogDescription>
+      <DialogDescription>Are you sure you want to delete this asset?</DialogDescription>
     </DialogHeader>
     <div className="flex justify-end gap-2">
       <Button variant="outline" onClick={() => setIsOpen(false)}>
@@ -508,6 +511,7 @@ export function Badge({ className, variant, ...props }: BadgeProps) {
 ```
 
 **Usage:**
+
 ```tsx
 <Badge variant="success">Active</Badge>
 <Badge variant="warning">Warranty Expiring</Badge>
@@ -566,20 +570,12 @@ export function FormField({
 ```
 
 **Usage:**
+
 ```tsx
 <FormProvider {...methods}>
   <form onSubmit={methods.handleSubmit(onSubmit)}>
-    <FormField
-      name="name"
-      label="Asset Name"
-      placeholder="Enter asset name"
-      required
-    />
-    <FormField
-      name="modelNumber"
-      label="Model Number"
-      placeholder="e.g., 24ACC636A003"
-    />
+    <FormField name="name" label="Asset Name" placeholder="Enter asset name" required />
+    <FormField name="modelNumber" label="Model Number" placeholder="e.g., 24ACC636A003" />
   </form>
 </FormProvider>
 ```
@@ -1018,6 +1014,7 @@ import {
 ```
 
 **Icon sizes:**
+
 - Small: `h-4 w-4` (16px)
 - Medium: `h-5 w-5` (20px) - default
 - Large: `h-6 w-6` (24px)
@@ -1126,6 +1123,7 @@ All interactive elements must have visible focus indicators:
 ### 11.3 Keyboard Navigation
 
 Ensure all components are keyboard accessible:
+
 - Tab to navigate
 - Enter/Space to activate
 - Escape to close modals

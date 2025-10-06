@@ -1,4 +1,5 @@
 # User Stories & Use Cases
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -33,6 +34,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can access "Add Asset" from multiple locations (dashboard, assets page, quick action)
 - [ ] User can enter basic information (name, category, location) with minimal fields required
 - [ ] User can optionally enter detailed information (model, serial number, purchase date, etc.)
@@ -46,12 +48,14 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] User can choose to add another asset or view the asset they just created
 
 **Edge Cases:**
+
 - User tries to save without required fields → Show validation errors
 - User uploads very large files → Show file size limit error
 - User enters invalid date (future purchase date) → Show validation error
 - User closes form midway → Offer to save draft (local storage)
 
 **User Flow:**
+
 1. User clicks "+ Add Asset" button
 2. Form appears (modal or new page)
 3. User fills in asset name, selects category and location
@@ -63,6 +67,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 9. User is redirected to asset detail page
 
 **Technical Notes:**
+
 - Store photos/docs in IndexedDB for offline support
 - Use optimistic UI - show asset immediately, sync later
 - Compress images before storage
@@ -79,6 +84,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can navigate to asset detail from asset list
 - [ ] Asset detail page shows all information clearly organized
 - [ ] User can view primary photo with option to see all photos
@@ -90,6 +96,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Page is responsive and works on mobile devices
 
 **User Flow:**
+
 1. User searches or browses for asset
 2. User clicks on asset card
 3. Asset detail page loads
@@ -109,6 +116,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can access edit mode from asset detail page
 - [ ] All existing information is pre-filled in the edit form
 - [ ] User can modify any field
@@ -120,6 +128,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Changes are immediately reflected in asset detail view
 
 **Edge Cases:**
+
 - User changes category → Maintain asset in new category
 - User removes all photos → Allow but warn user
 - User changes status to "replaced" → Prompt to link replacement asset
@@ -136,6 +145,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can search assets by name, manufacturer, model, or serial number
 - [ ] Search results appear as user types (instant search)
 - [ ] User can filter assets by category
@@ -147,6 +157,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] No results state is clear and helpful
 
 **User Flow:**
+
 1. User goes to assets page
 2. User types in search box OR applies filters
 3. Results update in real-time
@@ -166,6 +177,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can access delete option from asset detail or edit page
 - [ ] System shows confirmation dialog before deleting
 - [ ] Confirmation shows what will be deleted (maintenance records, photos, etc.)
@@ -175,11 +187,13 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] System provides "undo" option immediately after deletion (5-10 seconds)
 
 **Edge Cases:**
+
 - Asset has upcoming scheduled tasks → Warn user and delete tasks
 - Asset has extensive maintenance history → Warn user about data loss
 - User accidentally deletes → Undo option available briefly
 
 **Alternative Approach:**
+
 - Instead of delete, change status to "retired" to preserve history
 
 ---
@@ -194,6 +208,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike
 
 **Acceptance Criteria:**
+
 - [ ] Assets are organized by category on asset list page
 - [ ] Each category shows count of assets
 - [ ] Categories can be expanded/collapsed
@@ -215,6 +230,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can access "Log Maintenance" from multiple locations
 - [ ] User can select which asset the maintenance was for
 - [ ] User can select maintenance type (routine, repair, emergency, etc.)
@@ -231,6 +247,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Process takes less than 1 minute for basic entry
 
 **User Flow:**
+
 1. User clicks "Log Maintenance"
 2. Form appears (modal or drawer)
 3. User selects asset
@@ -241,6 +258,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 8. User can log another or return to previous screen
 
 **Quick Actions:**
+
 - Pre-fill asset if logging from asset detail page
 - Smart defaults (date = today, type = routine)
 - Remember last-used service provider
@@ -257,6 +275,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can view maintenance history in chronological order
 - [ ] Each record shows key details (date, asset, type, cost)
 - [ ] User can expand records to see full details
@@ -279,6 +298,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] Asset detail page shows maintenance history for that asset only
 - [ ] Records are in reverse chronological order (newest first)
 - [ ] User can see summary stats (total spent, services performed, etc.)
@@ -297,6 +317,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can edit maintenance record from history view
 - [ ] All fields are editable
 - [ ] User can add/remove photos and documents
@@ -315,6 +336,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can delete maintenance record
 - [ ] System requires confirmation
 - [ ] After deletion, record no longer appears
@@ -334,6 +356,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can create a new maintenance task
 - [ ] User can specify which asset the task is for
 - [ ] User can enter task title and description
@@ -346,6 +369,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Task appears on calendar view
 
 **User Flow:**
+
 1. User clicks "Add Task" or "Schedule Maintenance"
 2. Form appears
 3. User selects asset
@@ -367,6 +391,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can view all upcoming tasks sorted by due date
 - [ ] Overdue tasks are clearly highlighted
 - [ ] User can see tasks for next week, month, quarter
@@ -387,6 +412,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can mark task as complete from task list or calendar
 - [ ] System prompts to log maintenance details
 - [ ] Maintenance form is pre-filled with task information
@@ -397,6 +423,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] If recurring, next instance is automatically created
 
 **User Flow:**
+
 1. User sees upcoming task
 2. User performs maintenance
 3. User clicks "Complete" on task
@@ -420,6 +447,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can edit task details
 - [ ] User can change due date
 - [ ] User can change priority
@@ -439,6 +467,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike
 
 **Acceptance Criteria:**
+
 - [ ] User can view tasks in calendar format
 - [ ] User can navigate between months
 - [ ] Each day shows tasks due
@@ -461,6 +490,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can upload PDF, image, and common document formats
 - [ ] User can upload multiple files at once
 - [ ] User can drag-and-drop files
@@ -471,6 +501,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Files are immediately visible in asset or maintenance record
 
 **Edge Cases:**
+
 - File too large → Show error with size limit
 - Unsupported file type → Show error with supported types
 - Slow connection → Show upload progress, allow cancel
@@ -487,6 +518,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can view document list for asset or maintenance record
 - [ ] PDFs can be viewed in-app
 - [ ] Images can be viewed in gallery/lightbox
@@ -506,6 +538,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can delete individual documents
 - [ ] System requires confirmation
 - [ ] After deletion, document is removed from storage
@@ -525,6 +558,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can add service provider with contact details
 - [ ] User can enter company name, contact person, phone, email, website
 - [ ] User can enter service types offered
@@ -534,6 +568,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Provider is available for selection when logging maintenance
 
 **User Flow:**
+
 1. User goes to service providers section
 2. User clicks "Add Provider"
 3. Form appears
@@ -553,6 +588,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can view all service providers
 - [ ] List shows company name, phone, services
 - [ ] User can search providers
@@ -572,6 +608,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] When logging maintenance, user can select service provider
 - [ ] User can select from existing providers or add new
 - [ ] Provider is linked to maintenance record
@@ -591,6 +628,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can access search from anywhere (keyboard shortcut ⌘K/Ctrl+K)
 - [ ] Search looks across assets, maintenance records, tasks, providers
 - [ ] Results appear as user types
@@ -600,6 +638,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - [ ] Recent searches are saved
 
 **User Flow:**
+
 1. User presses ⌘K or clicks search
 2. Search modal opens
 3. User types query
@@ -619,6 +658,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can sort asset lists by name, date added, category, etc.
 - [ ] User can sort maintenance history by date, cost, type
 - [ ] User can sort tasks by due date, priority, cost
@@ -639,6 +679,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Linda
 
 **Acceptance Criteria:**
+
 - [ ] User can export all data to JSON format
 - [ ] User can export asset list to CSV
 - [ ] User can export maintenance history to CSV
@@ -658,6 +699,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Persona**: Sarah, Mike
 
 **Acceptance Criteria:**
+
 - [ ] User can upload CSV file with asset data
 - [ ] System validates CSV format
 - [ ] User can map CSV columns to asset fields
@@ -677,6 +719,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Preconditions**: Mike has just moved into his first home
 
 **Main Flow:**
+
 1. Mike opens HomeMaint for the first time
 2. Mike sees welcome screen
 3. Mike optionally enters home information (address, year built)
@@ -691,6 +734,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Postconditions**: Mike has complete home inventory with documentation
 
 **Alternative Flows:**
+
 - Mike imports data from home inspection report
 - Mike adds items incrementally over several days
 
@@ -704,6 +748,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Preconditions**: Linda's AC unit stops working on a hot day
 
 **Main Flow:**
+
 1. Linda opens HomeMaint on her phone
 2. Linda searches for "AC" or "air conditioner"
 3. Linda finds her AC unit
@@ -728,6 +773,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Preconditions**: Sarah is selling her home
 
 **Main Flow:**
+
 1. Sarah opens HomeMaint
 2. Sarah reviews all assets to ensure records are complete
 3. Sarah generates PDF report of home inventory
@@ -751,6 +797,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Preconditions**: October, time for winterization
 
 **Main Flow:**
+
 1. Sarah opens calendar view in HomeMaint
 2. Sarah sees all scheduled fall tasks
 3. Tasks include: gutter cleaning, furnace inspection, weatherstripping
@@ -773,6 +820,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Preconditions**: December, planning next year's budget
 
 **Main Flow:**
+
 1. Linda opens HomeMaint
 2. Linda views upcoming maintenance for next year
 3. System shows estimated costs for scheduled tasks
@@ -793,6 +841,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Scenario**: User loses internet connection while using app
 
 **Expected Behavior:**
+
 - App continues to function normally
 - User can view all cached data
 - User can add/edit assets and maintenance records
@@ -808,6 +857,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Scenario**: User has added many photos and reaches storage limit
 
 **Expected Behavior:**
+
 - System warns user when approaching limit (80%)
 - When limit reached, user cannot upload more files
 - Clear error message explains situation
@@ -824,6 +874,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Scenario**: User tries to add asset that might already exist
 
 **Expected Behavior:**
+
 - System checks for similar assets (same model/serial number)
 - If match found, warn user: "You may have already added this asset"
 - Show potential duplicate for comparison
@@ -837,6 +888,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Scenario**: User hasn't used app in months, has many overdue tasks
 
 **Expected Behavior:**
+
 - Dashboard shows overdue count prominently
 - User can bulk-complete or reschedule tasks
 - User can mark tasks as "not needed" without completing
@@ -850,6 +902,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Scenario**: User accidentally deletes important asset
 
 **Expected Behavior:**
+
 - Immediate undo option (toast notification with "Undo" button)
 - Undo available for 10 seconds
 - After timeout, deletion is permanent
@@ -865,6 +918,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Goal**: Complete all tasks without mouse
 
 **Acceptance Criteria:**
+
 - All features accessible via keyboard
 - Logical tab order
 - Visible focus indicators
@@ -879,6 +933,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Goal**: Navigate app and manage assets with screen reader
 
 **Acceptance Criteria:**
+
 - All content accessible to screen reader
 - Images have alt text
 - Forms have proper labels
@@ -895,6 +950,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Goal**: App remains fast with large dataset
 
 **Acceptance Criteria:**
+
 - Asset list loads in < 2 seconds
 - Search returns results in < 500ms
 - Scrolling is smooth (60 fps)
@@ -909,6 +965,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 **Goal**: Use app on poor network
 
 **Acceptance Criteria:**
+
 - App loads and works offline
 - Large images load progressively
 - Operations don't time out
@@ -922,6 +979,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 ### MVP (Phase 1)
 
 **Must Have:**
+
 - Add/View/Edit Assets (Stories 3.1, 3.2, 3.3)
 - Search/Filter Assets (Story 3.4)
 - Log Maintenance (Story 4.1)
@@ -930,6 +988,7 @@ This document contains detailed user stories and use cases for HomeMaint. Each u
 - Upload/View Documents (Stories 6.1, 6.2)
 
 **Should Have:**
+
 - Delete Assets (Story 3.5)
 - View by Category (Story 3.6)
 - Service Providers (Stories 7.1, 7.2, 7.3)

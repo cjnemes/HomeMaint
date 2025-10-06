@@ -1,4 +1,5 @@
 # API & Data Layer Interface
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -12,6 +13,7 @@
 This document defines the data layer architecture for HomeMaint, including database operations, state management, and data access patterns. Since the MVP is local-first with no backend API, this "API" refers to our data access layer that sits between React components and the local database.
 
 **Architecture:**
+
 ```
 React Components
        ↓
@@ -97,9 +99,11 @@ function setupAutoSave(database: Database): void {
   const originalExec = database.exec.bind(database);
   database.exec = function (sql: string) {
     const result = originalExec(sql);
-    if (sql.trim().toUpperCase().startsWith('INSERT') ||
-        sql.trim().toUpperCase().startsWith('UPDATE') ||
-        sql.trim().toUpperCase().startsWith('DELETE')) {
+    if (
+      sql.trim().toUpperCase().startsWith('INSERT') ||
+      sql.trim().toUpperCase().startsWith('UPDATE') ||
+      sql.trim().toUpperCase().startsWith('DELETE')
+    ) {
       hasChanges = true;
     }
     return result;
@@ -855,8 +859,7 @@ export const useAssetStore = create<AssetStore>()(
           }));
           return asset;
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : 'Failed to create asset';
+          const errorMessage = error instanceof Error ? error.message : 'Failed to create asset';
           set({ error: errorMessage, isLoading: false });
           throw new Error(errorMessage);
         }
@@ -873,8 +876,7 @@ export const useAssetStore = create<AssetStore>()(
           }));
           return updatedAsset;
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : 'Failed to update asset';
+          const errorMessage = error instanceof Error ? error.message : 'Failed to update asset';
           set({ error: errorMessage, isLoading: false });
           throw new Error(errorMessage);
         }
@@ -890,8 +892,7 @@ export const useAssetStore = create<AssetStore>()(
             isLoading: false,
           }));
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : 'Failed to delete asset';
+          const errorMessage = error instanceof Error ? error.message : 'Failed to delete asset';
           set({ error: errorMessage, isLoading: false });
           throw new Error(errorMessage);
         }
@@ -967,8 +968,7 @@ export function useAssets() {
  * Hook for a single asset
  */
 export function useAsset(id: number) {
-  const { selectedAsset, isLoading, error, getAsset, updateAsset, deleteAsset } =
-    useAssetStore();
+  const { selectedAsset, isLoading, error, getAsset, updateAsset, deleteAsset } = useAssetStore();
 
   useEffect(() => {
     if (id) {

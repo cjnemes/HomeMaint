@@ -33,18 +33,22 @@ Documentation for getting started will be added as development progresses.
 ## Technology Stack
 
 **Framework:**
+
 - Next.js 14+ (full-stack React framework)
 - TypeScript 5+ (strict mode)
 
 **Database:**
+
 - better-sqlite3 (SQLite for Node.js)
 - Local file-based storage
 
 **UI:**
+
 - Tailwind CSS + shadcn/ui
 - Responsive design (mobile-first)
 
 **Deployment:**
+
 - Progressive Web App (PWA)
 - Self-hosted / Local-first
 
@@ -53,6 +57,7 @@ See [Technical Architecture](docs/TECHNICAL_ARCHITECTURE.md) for complete detail
 ## Development Approach
 
 This project uses **autonomous development** with Claude Code:
+
 - Claude handles all coding, testing, and verification
 - Comprehensive automated test suite (unit, integration, E2E)
 - User reviews only at milestones (Week 4, 8, 12)
@@ -61,6 +66,7 @@ This project uses **autonomous development** with Claude Code:
 ## Development Roadmap
 
 ### Phase 1 - MVP (Months 1-3)
+
 - Core asset inventory management
 - Basic maintenance tracking
 - File attachments support
@@ -68,12 +74,14 @@ This project uses **autonomous development** with Claude Code:
 - Responsive web application
 
 ### Phase 2 - Enhanced Features (Months 4-6)
+
 - Photo management improvements
 - Service provider directory
 - Recurring maintenance & reminders
 - Reporting and analytics
 
 ### Phase 3 - Advanced Capabilities (Months 7-12)
+
 - Native mobile applications
 - Cloud sync capabilities
 - Advanced planning features

@@ -1,4 +1,5 @@
 # UI/UX Design Documentation
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -38,17 +39,20 @@ This document outlines the user interface and user experience design for HomeMai
 ### 3.1 Color Palette
 
 **Primary Colors:**
+
 - **Primary**: `#2563eb` (Blue 600) - Primary actions, links
 - **Primary Dark**: `#1e40af` (Blue 700) - Hover states
 - **Primary Light**: `#dbeafe` (Blue 100) - Backgrounds, badges
 
 **Semantic Colors:**
+
 - **Success**: `#16a34a` (Green 600) - Completed, active status
 - **Warning**: `#ea580c` (Orange 600) - Warnings, overdue items
 - **Error**: `#dc2626` (Red 600) - Errors, critical items
 - **Info**: `#0891b2` (Cyan 600) - Informational messages
 
 **Neutral Colors:**
+
 - **Gray 50**: `#f9fafb` - Page background
 - **Gray 100**: `#f3f4f6` - Card backgrounds
 - **Gray 200**: `#e5e7eb` - Borders, dividers
@@ -57,6 +61,7 @@ This document outlines the user interface and user experience design for HomeMai
 - **Gray 900**: `#111827` - Primary text
 
 **Category Colors (Pre-defined):**
+
 - HVAC: `#3b82f6` (Blue)
 - Plumbing: `#06b6d4` (Cyan)
 - Electrical: `#fbbf24` (Amber)
@@ -67,11 +72,13 @@ This document outlines the user interface and user experience design for HomeMai
 ### 3.2 Typography
 
 **Font Family:**
+
 - Primary: `Inter` (sans-serif)
 - Fallback: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`
 - Monospace: `"Fira Code", "Courier New", monospace` (for serial numbers, model numbers)
 
 **Type Scale:**
+
 ```
 Display: 48px / 3rem - font-bold (Page titles - rare)
 H1:      36px / 2.25rem - font-bold (Main headings)
@@ -86,6 +93,7 @@ XSmall:  12px / 0.75rem - font-normal (Labels, captions)
 ### 3.3 Spacing Scale
 
 Using 8px base unit:
+
 ```
 0:   0px
 1:   4px
@@ -104,6 +112,7 @@ Using 8px base unit:
 ### 3.4 Component Styling
 
 **Cards:**
+
 - Background: White / Gray 100
 - Border: 1px solid Gray 200
 - Border Radius: 8px (rounded-lg)
@@ -111,6 +120,7 @@ Using 8px base unit:
 - Padding: 16px (p-4) or 24px (p-6)
 
 **Buttons:**
+
 - Primary: Blue 600 background, white text, 8px radius
 - Secondary: White background, blue 600 border and text
 - Ghost: Transparent, blue 600 text
@@ -118,6 +128,7 @@ Using 8px base unit:
 - Padding: 16px horizontal, 8px vertical
 
 **Form Inputs:**
+
 - Height: 40px
 - Border: 1px solid Gray 300
 - Border Radius: 6px
@@ -128,6 +139,7 @@ Using 8px base unit:
 
 **Icon Library**: Lucide React or Heroicons
 **Sizes:**
+
 - Small: 16px
 - Medium: 20px
 - Large: 24px
@@ -155,12 +167,14 @@ Using 8px base unit:
 ```
 
 **Header (Desktop & Mobile):**
+
 - Height: 64px
 - Logo/App name (left)
 - Search bar (center, desktop only)
 - Quick actions + User menu (right)
 
 **Sidebar (Desktop only, 240px wide):**
+
 - Dashboard
 - Assets
 - Maintenance
@@ -169,6 +183,7 @@ Using 8px base unit:
 - Settings
 
 **Bottom Navigation (Mobile only):**
+
 - Dashboard
 - Assets
 - Add (center, prominent)
@@ -184,6 +199,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Responsive Behavior:**
+
 - **Mobile**: Bottom nav, no sidebar, stacked layouts
 - **Tablet**: Bottom nav OR sidebar (preference), 2-column grids
 - **Desktop**: Sidebar always visible, multi-column layouts, more data visible
@@ -197,6 +213,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: Quick overview of home status, upcoming maintenance, recent activity
 
 **Desktop Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Dashboard                                    [+ Quick Add]  │
@@ -234,6 +251,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Mobile Layout:**
+
 ```
 ┌──────────────────────┐
 │  Dashboard        ☰ │
@@ -273,6 +291,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Key Elements:**
+
 - Summary cards with key metrics
 - Upcoming maintenance list (next 5-7 items)
 - Recent activity feed
@@ -286,6 +305,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: Browse and search all assets
 
 **Desktop Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Assets                                       [+ Add Asset]  │
@@ -321,11 +341,13 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Alternative Views:**
+
 - **Grid View**: Cards in 2-3 column grid
 - **Table View**: Compact table format for power users
 - **Map View** (future): Show assets on floor plan
 
 **Key Elements:**
+
 - Search bar with instant filtering
 - Category/location/status filters
 - Collapsible category groups
@@ -339,6 +361,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: View all information about a specific asset
 
 **Desktop Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  ← Assets / HVAC / Carrier AC Unit              [Edit] [⋯]  │
@@ -409,6 +432,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Key Elements:**
+
 - Breadcrumb navigation
 - Photo gallery with primary photo
 - Expandable detail sections
@@ -425,6 +449,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: Add new asset or edit existing
 
 **Desktop Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Add New Asset                               [Save] [Cancel] │
@@ -498,7 +523,8 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Form Behavior:**
-- Required fields marked with *
+
+- Required fields marked with \*
 - Smart defaults (status = active)
 - Auto-calculate warranty expiration and replacement dates
 - Drag-and-drop file upload
@@ -513,6 +539,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: View all maintenance history across all assets
 
 **Desktop Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Maintenance History                    [+ Log Maintenance]  │
@@ -558,6 +585,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Key Elements:**
+
 - Search and filter capabilities
 - Multiple view options (timeline, list, calendar)
 - Maintenance cards with key info
@@ -571,6 +599,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: View and manage future maintenance tasks
 
 **Desktop Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Maintenance Calendar                      [+ Add Task]      │
@@ -622,6 +651,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Key Elements:**
+
 - Calendar with task indicators
 - List of upcoming tasks sorted by date
 - Priority and cost information
@@ -636,6 +666,7 @@ Desktop:   > 1024px (xl, 2xl)
 **Purpose**: Quickly log completed maintenance
 
 **Modal/Drawer Layout:**
+
 ```
 ┌─────────────────────────────────────┐
 │  Log Maintenance              [✕]   │
@@ -678,6 +709,7 @@ Desktop:   > 1024px (xl, 2xl)
 ```
 
 **Key Elements:**
+
 - Asset selector with search/autocomplete
 - Type selection (radio buttons)
 - Optional fields clearly marked
@@ -705,6 +737,7 @@ Explore Features
 ```
 
 **Onboarding Principles:**
+
 - Minimal required information to get started
 - Progressive disclosure - show features as needed
 - Allow skip and return later
@@ -732,6 +765,7 @@ Prompt: "Add maintenance task?"
 ```
 
 **Flow Variations:**
+
 - **Quick Add**: Mobile-friendly, minimal fields
 - **Detailed Add**: Desktop, all fields available
 - **Import**: Bulk import from spreadsheet (future)
@@ -806,11 +840,13 @@ Navigate to detail page
 ### 7.1 Mobile Adaptations
 
 **Navigation:**
+
 - Sidebar → Bottom navigation bar (5 icons max)
 - Hamburger menu for additional options
 - Sticky header with back button
 
 **Forms:**
+
 - Single column layout
 - Larger touch targets (min 44px)
 - Native date/number pickers
@@ -818,12 +854,14 @@ Navigate to detail page
 - Floating action button for primary action
 
 **Lists & Cards:**
+
 - Single column, full-width cards
 - Swipe gestures (swipe to delete, complete)
 - Pull to refresh
 - Infinite scroll instead of pagination
 
 **Data Display:**
+
 - Collapse secondary information
 - Show/hide details on tap
 - Use accordions for grouped content
@@ -832,15 +870,18 @@ Navigate to detail page
 ### 7.2 Tablet Adaptations
 
 **Navigation:**
+
 - Can use sidebar OR bottom nav (user preference)
 - More space for filters and actions
 
 **Layout:**
+
 - 2-column grids where appropriate
 - Side-by-side forms on landscape
 - Split view for list + detail (landscape)
 
 **Interactions:**
+
 - Support both touch and cursor
 - Larger clickable areas than desktop
 - Hover states for cursor users
@@ -852,11 +893,13 @@ Navigate to detail page
 ### 8.1 WCAG 2.1 AA Compliance
 
 **Color Contrast:**
+
 - Text: 4.5:1 minimum
 - Large text (18px+): 3:1 minimum
 - UI components: 3:1 minimum
 
 **Keyboard Navigation:**
+
 - All interactive elements keyboard accessible
 - Visible focus indicators
 - Logical tab order
@@ -864,6 +907,7 @@ Navigate to detail page
 - Keyboard shortcuts (with help overlay)
 
 **Screen Reader Support:**
+
 - Semantic HTML elements
 - ARIA labels where needed
 - Alt text for all images
@@ -871,6 +915,7 @@ Navigate to detail page
 - Status announcements for dynamic content
 
 **Visual Considerations:**
+
 - Responsive text sizing
 - Zoom up to 200% without breaking
 - No reliance on color alone
@@ -891,6 +936,7 @@ Navigate to detail page
 ### 9.1 Empty States
 
 **No Assets:**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -907,6 +953,7 @@ Navigate to detail page
 ```
 
 **No Maintenance Records:**
+
 ```
 ┌─────────────────────────────────┐
 │         [Icon]                  │
@@ -943,6 +990,7 @@ Navigate to detail page
 ### 9.5 Confirmations
 
 **Destructive Actions:**
+
 ```
 ┌─────────────────────────────────┐
 │  Delete Asset?             [✕]  │
@@ -976,19 +1024,23 @@ Navigate to detail page
 ### 10.2 Common Animations
 
 **Page Transitions:**
+
 - Fade in/out: 200ms
 - Slide in/out: 250ms (for modals, drawers)
 
 **Micro-interactions:**
+
 - Button press: Scale down slightly (95%), 100ms
 - Checkbox/toggle: Smooth transition, 150ms
 - Hover effects: 150ms
 
 **Loading:**
+
 - Skeleton shimmer: 2s loop
 - Spinner rotation: 1s linear infinite
 
 **List Animations:**
+
 - Stagger items: 50ms delay between items
 - Add item: Fade + slide in from top
 - Remove item: Fade + slide out + collapse
@@ -1000,19 +1052,23 @@ Navigate to detail page
 ### 11.1 Dark Mode Colors
 
 **Background:**
+
 - Primary: `#0f172a` (Slate 900)
 - Secondary: `#1e293b` (Slate 800)
 - Tertiary: `#334155` (Slate 700)
 
 **Text:**
+
 - Primary: `#f1f5f9` (Slate 100)
 - Secondary: `#cbd5e1` (Slate 300)
 - Tertiary: `#94a3b8` (Slate 400)
 
 **Borders:**
+
 - `#334155` (Slate 700)
 
 **Adjustments:**
+
 - Reduce image/photo brightness slightly
 - Increase contrast for text
 - Soften shadows
@@ -1061,6 +1117,7 @@ Navigate to detail page
 ### 13.2 Design Tokens
 
 Create design tokens file:
+
 ```javascript
 colors: {
   primary: { ... },
@@ -1078,12 +1135,14 @@ borderRadius: { sm: 4, md: 6, lg: 8, xl: 12 },
 ## Appendix A: Design Inspiration
 
 **Similar Apps:**
+
 - HomeZada (home inventory)
 - Sortly (inventory management)
 - Notion (flexibility, data organization)
 - Linear (clean, fast UI)
 
 **Design Systems:**
+
 - Tailwind UI
 - shadcn/ui
 - Radix Themes

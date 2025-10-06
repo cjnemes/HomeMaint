@@ -1,4 +1,5 @@
 # Development Setup & Contributing Guide
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -18,13 +19,16 @@ This guide covers everything you need to know to contribute to HomeMaint, from s
 ### 2.1 Required Software
 
 **Node.js & Package Manager:**
+
 - Node.js 18+ (LTS recommended)
 - npm 9+ or pnpm 8+ (pnpm preferred for speed)
 
 **Git:**
+
 - Git 2.30+
 
 **Code Editor:**
+
 - VS Code (recommended) with extensions:
   - ESLint
   - Prettier
@@ -32,6 +36,7 @@ This guide covers everything you need to know to contribute to HomeMaint, from s
   - TypeScript and JavaScript Language Features
 
 **Browser:**
+
 - Chrome/Edge (with React DevTools extension)
 - Firefox Developer Edition (alternative)
 
@@ -146,22 +151,26 @@ HomeMaint/
 ### 4.1 Key Directories
 
 **`src/components/`**
+
 - Reusable React components
 - Organized by feature or purpose
 - Each component should have its own folder with tests
 
 **`src/lib/db/`**
+
 - Database layer and data access
 - SQL queries
 - Database initialization
 - Migration scripts
 
 **`src/stores/`**
+
 - Zustand state stores
 - Global application state
 - Async actions
 
 **`src/hooks/`**
+
 - Custom React hooks
 - Reusable logic
 - Data fetching hooks
@@ -184,6 +193,7 @@ chore/    # Maintenance tasks
 ```
 
 **Examples:**
+
 ```bash
 feature/asset-search
 bug/maintenance-form-validation
@@ -196,6 +206,7 @@ chore/update-dependencies
 ### 5.2 Git Workflow
 
 **1. Create a new branch:**
+
 ```bash
 # Always branch from main
 git checkout main
@@ -204,6 +215,7 @@ git checkout -b feature/your-feature-name
 ```
 
 **2. Make changes and commit:**
+
 ```bash
 # Stage your changes
 git add .
@@ -213,11 +225,13 @@ git commit -m "feat: add asset search functionality"
 ```
 
 **3. Push to GitHub:**
+
 ```bash
 git push origin feature/your-feature-name
 ```
 
 **4. Create Pull Request:**
+
 ```bash
 # Using GitHub CLI
 gh pr create --title "Add asset search functionality" --body "Description of changes"
@@ -230,6 +244,7 @@ gh pr create --title "Add asset search functionality" --body "Description of cha
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 **Format:**
+
 ```
 <type>(<scope>): <subject>
 
@@ -239,6 +254,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat:` New feature
 - `fix:` Bug fix
 - `docs:` Documentation changes
@@ -248,6 +264,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore:` Maintenance tasks, dependency updates
 
 **Examples:**
+
 ```bash
 feat(assets): add search and filter functionality
 
@@ -281,6 +298,7 @@ Adds comprehensive test coverage for create, read, update, delete operations.
 ### 5.4 Pull Request Guidelines
 
 **Before Creating PR:**
+
 - [ ] Code follows style guide
 - [ ] All tests pass (`npm run test`)
 - [ ] Linting passes (`npm run lint`)
@@ -289,6 +307,7 @@ Adds comprehensive test coverage for create, read, update, delete operations.
 - [ ] Documentation updated if needed
 
 **PR Description Should Include:**
+
 1. **What**: Brief description of changes
 2. **Why**: Reason for changes/problem being solved
 3. **How**: Technical approach (if complex)
@@ -297,28 +316,35 @@ Adds comprehensive test coverage for create, read, update, delete operations.
 6. **Related Issues**: Link to GitHub issues
 
 **PR Template:**
+
 ```markdown
 ## Description
+
 Brief description of what this PR does.
 
 ## Related Issues
+
 Closes #123
 
 ## Changes Made
+
 - Added X feature
 - Fixed Y bug
 - Refactored Z component
 
 ## Testing
+
 - [ ] Tested on desktop Chrome
 - [ ] Tested on mobile Safari
 - [ ] Unit tests added/updated
 - [ ] All existing tests pass
 
 ## Screenshots (if applicable)
+
 [Add screenshots here]
 
 ## Checklist
+
 - [ ] Code follows style guide
 - [ ] Tests pass
 - [ ] Documentation updated
@@ -331,6 +357,7 @@ Closes #123
 ### 6.1 TypeScript
 
 **Always use TypeScript strict mode:**
+
 ```json
 // tsconfig.json
 {
@@ -343,6 +370,7 @@ Closes #123
 ```
 
 **Type everything explicitly:**
+
 ```typescript
 // ✅ Good
 interface Asset {
@@ -362,6 +390,7 @@ function getAsset(id) {
 ```
 
 **Use interfaces over types for objects:**
+
 ```typescript
 // ✅ Preferred
 interface Asset {
@@ -376,6 +405,7 @@ type Status = 'active' | 'retired' | 'broken';
 ### 6.2 React Components
 
 **Use functional components with TypeScript:**
+
 ```typescript
 // ✅ Good
 interface AssetCardProps {
@@ -399,15 +429,17 @@ export function AssetCard({ asset, onEdit }) {
 ```
 
 **Use named exports:**
+
 ```typescript
 // ✅ Preferred
-export function AssetCard() { }
+export function AssetCard() {}
 
 // ❌ Avoid default exports
 export default AssetCard;
 ```
 
 **Component file structure:**
+
 ```typescript
 // 1. Imports
 import { useState } from 'react';
@@ -434,20 +466,23 @@ export function AssetCard({ asset }: AssetCardProps) {
 ### 6.3 Naming Conventions
 
 **Variables & Functions:**
+
 ```typescript
 // camelCase for variables and functions
 const assetCount = 10;
-function getAssetById(id: number) { }
+function getAssetById(id: number) {}
 ```
 
 **Components:**
+
 ```typescript
 // PascalCase for components
-function AssetCard() { }
-function MainLayout() { }
+function AssetCard() {}
+function MainLayout() {}
 ```
 
 **Constants:**
+
 ```typescript
 // UPPER_SNAKE_CASE for constants
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -455,26 +490,29 @@ const DEFAULT_CATEGORY = 'other';
 ```
 
 **Types & Interfaces:**
+
 ```typescript
 // PascalCase for types and interfaces
-interface Asset { }
+interface Asset {}
 type AssetStatus = 'active' | 'retired';
 ```
 
 **Files:**
+
 ```typescript
 // kebab-case for files (except components)
-asset-utils.ts
-validation-helpers.ts
+asset - utils.ts;
+validation - helpers.ts;
 
 // PascalCase for component files
-AssetCard.tsx
-MainLayout.tsx
+AssetCard.tsx;
+MainLayout.tsx;
 ```
 
 ### 6.4 Import Organization
 
 **Order imports:**
+
 ```typescript
 // 1. External libraries
 import { useState, useEffect } from 'react';
@@ -493,6 +531,7 @@ import styles from './styles.module.css';
 ### 6.5 Formatting
 
 **Use Prettier for automatic formatting:**
+
 ```json
 // .prettierrc
 {
@@ -506,6 +545,7 @@ import styles from './styles.module.css';
 ```
 
 **ESLint rules:**
+
 ```json
 // .eslintrc.json
 {
@@ -527,6 +567,7 @@ import styles from './styles.module.css';
 ### 6.6 Comments & Documentation
 
 **Use JSDoc for functions:**
+
 ```typescript
 /**
  * Retrieves an asset by ID
@@ -539,15 +580,14 @@ export function getAssetById(id: number): Asset | null {
 ```
 
 **Inline comments for complex logic:**
+
 ```typescript
 // Calculate warranty expiration date based on purchase date and duration
-const warrantyExpirationDate = addMonths(
-  asset.purchaseDate,
-  asset.warrantyDurationMonths
-);
+const warrantyExpirationDate = addMonths(asset.purchaseDate, asset.warrantyDurationMonths);
 ```
 
 **Avoid obvious comments:**
+
 ```typescript
 // ❌ Bad - obvious
 // Set the name to the value
@@ -565,12 +605,14 @@ asset.name = value.toUpperCase();
 ### 7.1 Schema Changes
 
 **Never modify existing migrations:**
+
 ```bash
 # ❌ Don't edit existing migrations
 # ✅ Create new migration for changes
 ```
 
 **Create migration for schema changes:**
+
 ```typescript
 // src/lib/db/migrations/002_add_asset_status.ts
 export const migration002 = {
@@ -586,13 +628,14 @@ export const migration002 = {
       ALTER TABLE assets
       DROP COLUMN status
     `);
-  }
+  },
 };
 ```
 
 ### 7.2 Database Queries
 
 **Use parameterized queries:**
+
 ```typescript
 // ✅ Good - prevents SQL injection
 const asset = db.prepare('SELECT * FROM assets WHERE id = ?').get(id);
@@ -602,6 +645,7 @@ const asset = db.prepare(`SELECT * FROM assets WHERE id = ${id}`).get();
 ```
 
 **Use transactions for multiple operations:**
+
 ```typescript
 // ✅ Good
 const transaction = db.transaction((asset, maintenanceRecord) => {
@@ -619,6 +663,7 @@ transaction(assetData, maintenanceData);
 ### 8.1 Test Coverage Requirements
 
 **Minimum coverage targets:**
+
 - Overall: 80%
 - Critical paths (CRUD operations): 95%
 - Utility functions: 90%
@@ -643,6 +688,7 @@ npm run test:e2e
 ### 8.3 Writing Tests
 
 **Unit test example:**
+
 ```typescript
 // src/lib/utils/__tests__/date-utils.test.ts
 import { describe, it, expect } from 'vitest';
@@ -663,6 +709,7 @@ describe('date-utils', () => {
 ```
 
 **Component test example:**
+
 ```typescript
 // src/components/AssetCard.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -698,6 +745,7 @@ describe('AssetCard', () => {
 ### 9.1 Component Optimization
 
 **Use React.memo for expensive components:**
+
 ```typescript
 export const AssetCard = React.memo(({ asset }: AssetCardProps) => {
   return <div>{asset.name}</div>;
@@ -705,6 +753,7 @@ export const AssetCard = React.memo(({ asset }: AssetCardProps) => {
 ```
 
 **Use useMemo for expensive calculations:**
+
 ```typescript
 const sortedAssets = useMemo(() => {
   return assets.sort((a, b) => a.name.localeCompare(b.name));
@@ -712,6 +761,7 @@ const sortedAssets = useMemo(() => {
 ```
 
 **Use useCallback for event handlers:**
+
 ```typescript
 const handleEdit = useCallback((id: number) => {
   // handler logic
@@ -721,6 +771,7 @@ const handleEdit = useCallback((id: number) => {
 ### 9.2 Bundle Size
 
 **Use dynamic imports for routes:**
+
 ```typescript
 // ✅ Good - code splitting
 const AssetDetail = lazy(() => import('./pages/AssetDetail'));
@@ -730,6 +781,7 @@ import { AssetDetail } from './pages/AssetDetail';
 ```
 
 **Tree-shake unused code:**
+
 ```typescript
 // ✅ Good - import only what you need
 import { useState, useEffect } from 'react';
@@ -745,6 +797,7 @@ import * as React from 'react';
 ### 10.1 Semantic HTML
 
 **Use semantic elements:**
+
 ```tsx
 // ✅ Good
 <button onClick={handleClick}>Click me</button>
@@ -758,6 +811,7 @@ import * as React from 'react';
 ### 10.2 ARIA Labels
 
 **Provide labels for interactive elements:**
+
 ```tsx
 <button aria-label="Delete asset">
   <TrashIcon />
@@ -773,6 +827,7 @@ import * as React from 'react';
 ### 10.3 Keyboard Navigation
 
 **Ensure keyboard accessibility:**
+
 ```tsx
 <div
   role="button"
@@ -856,6 +911,7 @@ npm run test:e2e:ui
 ### 12.1 Common Issues
 
 **Issue: Port 5173 already in use**
+
 ```bash
 # Kill process using port
 lsof -ti:5173 | xargs kill -9
@@ -865,6 +921,7 @@ npm run dev -- --port 3000
 ```
 
 **Issue: Database locked**
+
 ```bash
 # Close all browser tabs
 # Clear browser storage
@@ -872,6 +929,7 @@ npm run dev -- --port 3000
 ```
 
 **Issue: Type errors after dependency update**
+
 ```bash
 # Clear TypeScript cache
 rm -rf node_modules/.cache
@@ -895,6 +953,7 @@ npm install
 ### 13.1 Version Numbering
 
 We follow [Semantic Versioning](https://semver.org/):
+
 - MAJOR.MINOR.PATCH (e.g., 1.0.0)
 - MAJOR: Breaking changes
 - MINOR: New features (backwards compatible)
@@ -926,6 +985,7 @@ gh release create v1.0.1 --notes "Release notes here"
 ## 14. Code Review Checklist
 
 **For Reviewers:**
+
 - [ ] Code follows style guide
 - [ ] Tests are included and pass
 - [ ] No console.log statements (use console.warn/error if needed)
@@ -937,6 +997,7 @@ gh release create v1.0.1 --notes "Release notes here"
 - [ ] No security issues (SQL injection, XSS, etc.)
 
 **For Authors:**
+
 - [ ] Self-reviewed code
 - [ ] Tested on multiple browsers
 - [ ] Tested on mobile
@@ -950,17 +1011,20 @@ gh release create v1.0.1 --notes "Release notes here"
 ## 15. Resources
 
 ### 15.1 Documentation
+
 - [React Documentation](https://react.dev)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [Vite Guide](https://vitejs.dev/guide/)
 
 ### 15.2 Tools
+
 - [Can I Use](https://caniuse.com/) - Browser compatibility
 - [Lighthouse](https://developer.chrome.com/docs/lighthouse/) - Performance auditing
 - [WAVE](https://wave.webaim.org/) - Accessibility testing
 
 ### 15.3 Learning
+
 - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
 - [React Patterns](https://reactpatterns.com/)
 - [Web.dev](https://web.dev/) - Modern web development
@@ -970,15 +1034,18 @@ gh release create v1.0.1 --notes "Release notes here"
 ## 16. Contact & Support
 
 **Questions?**
+
 - Open a GitHub issue with `question` label
 - Start a discussion in GitHub Discussions
 
 **Found a bug?**
+
 - Open a GitHub issue with `bug` label
 - Include reproduction steps
 - Include browser/OS information
 
 **Want to contribute?**
+
 - Check open issues labeled `good first issue`
 - Read this guide thoroughly
 - Submit a draft PR if you want early feedback

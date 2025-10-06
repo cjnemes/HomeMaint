@@ -1,4 +1,5 @@
 # Testing Strategy
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -12,6 +13,7 @@
 This document outlines our comprehensive testing strategy for HomeMaint. Our goal is to maintain high code quality, prevent regressions, and ship with confidence.
 
 **Testing Philosophy:**
+
 - Write tests that provide value, not just coverage
 - Test behavior, not implementation details
 - Fast feedback loop for developers
@@ -37,6 +39,7 @@ We follow the testing pyramid principle:
 ```
 
 **Distribution:**
+
 - **60% Unit Tests**: Fast, focused, test individual functions/components
 - **30% Integration Tests**: Test feature slices, component interactions
 - **10% E2E Tests**: Full user flows, critical paths only
@@ -48,17 +51,20 @@ We follow the testing pyramid principle:
 ### 3.1 Core Testing Stack
 
 **Test Runner & Framework:**
+
 - **Vitest** - Fast, Vite-native test runner
 - Modern, TypeScript-first
 - Compatible with Jest API
 - Fast watch mode
 
 **React Testing:**
+
 - **React Testing Library** - Component testing
 - **@testing-library/user-event** - User interaction simulation
 - **@testing-library/jest-dom** - Custom matchers
 
 **E2E Testing:**
+
 - **Playwright** - End-to-end testing
 - **Playwright MCP** - Browser automation via Claude Code
   - Enables autonomous E2E testing without manual intervention
@@ -70,20 +76,24 @@ We follow the testing pyramid principle:
 - **Critical for autonomous development**: Full UI testing automation
 
 **Code Coverage:**
+
 - **c8** (built into Vitest) - Coverage reporting
 - **Istanbul** - Coverage visualization
 
 ### 3.2 Additional Tools
 
 **Mocking:**
+
 - **Vitest mocks** - Built-in mocking
 - **MSW (Mock Service Worker)** - API mocking (if needed in future)
 
 **Database Testing:**
+
 - **sql.js** - In-memory SQLite for tests
 - Fresh database per test suite
 
 **Visual Regression (Future):**
+
 - **Chromatic** or **Percy** - Visual diff testing
 
 ---
@@ -93,24 +103,28 @@ We follow the testing pyramid principle:
 ### 4.1 What to Unit Test
 
 **Utility Functions:**
+
 - Date formatting and manipulation
 - Validation functions
 - Calculation helpers
 - Data transformations
 
 **Business Logic:**
+
 - Asset calculations (warranty expiration, replacement dates)
 - Recurring task logic
 - Search and filter algorithms
 - Sort functions
 
 **Custom Hooks:**
+
 - useAssets
 - useMaintenance
 - useTasks
 - Form hooks
 
 **State Management:**
+
 - Zustand store actions
 - State selectors
 - State updates
@@ -170,6 +184,7 @@ describe('date-utils', () => {
 ### 4.3 Unit Test Best Practices
 
 **✅ Do:**
+
 - Test one thing per test
 - Use descriptive test names
 - Follow Arrange-Act-Assert pattern
@@ -178,6 +193,7 @@ describe('date-utils', () => {
 - Keep tests fast (<50ms per test)
 
 **❌ Don't:**
+
 - Test implementation details
 - Test library code
 - Have tests depend on each other
@@ -191,6 +207,7 @@ describe('date-utils', () => {
 ### 5.1 What to Component Test
 
 **UI Components:**
+
 - Render correctly with props
 - Handle user interactions (click, input, etc.)
 - Display correct state
@@ -198,12 +215,14 @@ describe('date-utils', () => {
 - Handle loading and error states
 
 **Form Components:**
+
 - Validation works
 - Submit handlers called with correct data
 - Error messages displayed
 - Required fields enforced
 
 **Layout Components:**
+
 - Responsive behavior
 - Navigation works
 - Accessibility features
@@ -341,6 +360,7 @@ describe('AssetForm', () => {
 ### 5.4 Component Testing Best Practices
 
 **✅ Do:**
+
 - Query by role, label, or text (not by implementation details)
 - Use `userEvent` for realistic interactions
 - Test from user's perspective
@@ -349,6 +369,7 @@ describe('AssetForm', () => {
 - Test error boundaries
 
 **❌ Don't:**
+
 - Query by class names or test IDs (when avoidable)
 - Test CSS styles (use visual regression instead)
 - Snapshot test entire components
@@ -362,17 +383,20 @@ describe('AssetForm', () => {
 ### 6.1 What to Integration Test
 
 **Feature Slices:**
+
 - Complete CRUD flows (create, read, update, delete assets)
 - Form submission to database
 - Search and filter functionality
 - Task completion flow
 
 **Database Operations:**
+
 - Multi-table operations
 - Transactions
 - Data integrity constraints
 
 **State Management:**
+
 - Store updates propagate to components
 - Actions trigger correct state changes
 - Side effects work correctly
@@ -488,6 +512,7 @@ export function getTestDatabase(): Database {
 ### 6.4 Integration Test Best Practices
 
 **✅ Do:**
+
 - Test realistic user scenarios
 - Use actual database (in-memory SQLite)
 - Test transactions and rollbacks
@@ -496,6 +521,7 @@ export function getTestDatabase(): Database {
 - Test async operations properly
 
 **❌ Don't:**
+
 - Mock the database layer
 - Share state between tests
 - Test every edge case (use unit tests)
@@ -508,6 +534,7 @@ export function getTestDatabase(): Database {
 ### 7.1 What to E2E Test
 
 **Critical User Flows:**
+
 - New user onboarding
 - Add first asset
 - Log maintenance
@@ -516,6 +543,7 @@ export function getTestDatabase(): Database {
 - Export data
 
 **Cross-Browser Scenarios:**
+
 - Installation as PWA
 - Offline functionality
 - File uploads
@@ -668,6 +696,7 @@ export default defineConfig({
 ### 7.4 E2E Test Best Practices
 
 **✅ Do:**
+
 - Test critical user journeys
 - Test on multiple browsers/devices
 - Use page objects for complex interactions
@@ -676,6 +705,7 @@ export default defineConfig({
 - Run in CI pipeline
 
 **❌ Don't:**
+
 - Test every scenario (focus on critical paths)
 - Make tests depend on each other
 - Use arbitrary timeouts (use proper waits)
@@ -689,12 +719,14 @@ export default defineConfig({
 ### 8.1 Coverage Targets
 
 **Overall Coverage:**
+
 - **Statements**: ≥ 80%
 - **Branches**: ≥ 75%
 - **Functions**: ≥ 80%
 - **Lines**: ≥ 80%
 
 **Critical Code:**
+
 - **Database Operations**: ≥ 95%
 - **Business Logic**: ≥ 90%
 - **Utility Functions**: ≥ 90%
@@ -713,6 +745,7 @@ open coverage/index.html
 ### 8.3 Coverage Requirements
 
 **What Must Be Covered:**
+
 - All CRUD operations
 - All validation logic
 - All calculations (warranty, replacement dates)
@@ -720,6 +753,7 @@ open coverage/index.html
 - All user-facing features
 
 **What Can Have Lower Coverage:**
+
 - Type definitions
 - Configuration files
 - Simple presentational components
@@ -941,21 +975,25 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
 ```yaml
 # lighthouserc.json
 {
-  "ci": {
-    "collect": {
-      "startServerCommand": "npm run preview",
-      "url": ["http://localhost:4173"],
-      "numberOfRuns": 3
+  'ci':
+    {
+      'collect':
+        {
+          'startServerCommand': 'npm run preview',
+          'url': ['http://localhost:4173'],
+          'numberOfRuns': 3,
+        },
+      'assert':
+        {
+          'assertions':
+            {
+              'categories:performance': ['error', { 'minScore': 0.9 }],
+              'categories:accessibility': ['error', { 'minScore': 0.95 }],
+              'categories:best-practices': ['error', { 'minScore': 0.95 }],
+              'categories:pwa': ['error', { 'minScore': 1.0 }],
+            },
+        },
     },
-    "assert": {
-      "assertions": {
-        "categories:performance": ["error", { "minScore": 0.9 }],
-        "categories:accessibility": ["error", { "minScore": 0.95 }],
-        "categories:best-practices": ["error", { "minScore": 0.95 }],
-        "categories:pwa": ["error", { "minScore": 1.0 }]
-      }
-    }
-  }
 }
 ```
 
@@ -974,11 +1012,7 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
     }
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write",
-      "vitest related --run"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write", "vitest related --run"]
   }
 }
 ```
@@ -986,18 +1020,21 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
 ### 13.2 CI/CD Integration
 
 **On Every Push:**
+
 - Run linter
 - Run type checker
 - Run unit and integration tests
 - Generate coverage report
 
 **On Pull Request:**
+
 - All of the above, plus:
 - Run E2E tests
 - Check coverage thresholds
 - Run Lighthouse CI
 
 **Before Release:**
+
 - Full test suite (all browsers)
 - Manual QA testing
 - Accessibility audit
@@ -1010,6 +1047,7 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
 ### 14.1 When to Update Tests
 
 **Update tests when:**
+
 - Feature requirements change
 - Bug is found (write failing test first)
 - Refactoring code
@@ -1017,12 +1055,14 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
 - Test is slow
 
 **Don't update tests when:**
+
 - Implementation details change (if tests still pass)
 - Snapshot tests fail due to styling changes (use visual regression instead)
 
 ### 14.2 Dealing with Flaky Tests
 
 **If a test is flaky:**
+
 1. Identify the cause (timing, external dependency, shared state)
 2. Fix the root cause (use proper waits, reset state, mock dependencies)
 3. If can't fix, quarantine the test (skip and create issue)
@@ -1033,6 +1073,7 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
 ## 15. Testing Anti-Patterns to Avoid
 
 **❌ Don't:**
+
 - Test implementation details (internal state, private methods)
 - Use arbitrary timeouts (`setTimeout`)
 - Share state between tests
@@ -1072,18 +1113,22 @@ test('should load dashboard in under 3 seconds', async ({ page }) => {
 ## 17. Resources & Learning
 
 **Testing Library:**
+
 - [React Testing Library Docs](https://testing-library.com/react)
 - [Common Mistakes with RTL](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
 
 **Vitest:**
+
 - [Vitest Docs](https://vitest.dev/)
 - [Vitest vs Jest](https://vitest.dev/guide/comparisons.html)
 
 **Playwright:**
+
 - [Playwright Docs](https://playwright.dev/)
 - [Best Practices](https://playwright.dev/docs/best-practices)
 
 **General Testing:**
+
 - [Testing Trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
 - [Write Tests. Not Too Many. Mostly Integration.](https://kentcdodds.com/blog/write-tests)
 

@@ -1,4 +1,5 @@
 # Development Roadmap
+
 ## HomeMaint - 12-Week MVP Development Plan
 
 **Status**: Ready to Begin
@@ -12,6 +13,7 @@
 This roadmap tracks the development of HomeMaint from initial setup through launch. Development is fully autonomous with Claude handling all coding and testing. User reviews occur at 3 key milestones.
 
 **GitHub Organization:**
+
 - **Milestones**: Track major phases with due dates
 - **Issues**: Detailed tasks with acceptance criteria
 - **Labels**: Organize work by type (setup, feature, testing, etc.)
@@ -21,11 +23,13 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 ## Milestones
 
 ### Milestone 0: Week 1 - Project Setup
+
 **Due**: October 12, 2025
 **Status**: In Progress
 **Goal**: Complete development environment setup
 
 **Issues (6)**:
+
 - #1: Initialize Next.js 14 project with TypeScript
 - #2: Configure ESLint, Prettier, and code quality tools
 - #3: Set up Tailwind CSS and shadcn/ui
@@ -34,6 +38,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - #6: Create initial project documentation
 
 **Deliverables:**
+
 - ✅ Next.js project running
 - ✅ All dev tools configured
 - ✅ Database layer operational
@@ -43,12 +48,14 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 ---
 
 ### Milestone 1: Core Foundation (Week 4)
+
 **Due**: November 2, 2025
 **Status**: Not Started
 **Goal**: Asset management CRUD + basic UI
 **👤 USER REVIEW REQUIRED**
 
 **Key Features:**
+
 - Database layer with full schema
 - Asset repository (CRUD operations)
 - API routes for assets
@@ -59,6 +66,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - Comprehensive test suite
 
 **Success Criteria:**
+
 - User can add, view, edit, delete assets
 - All tests passing (85%+ coverage)
 - Visual design follows mockups
@@ -67,12 +75,14 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 ---
 
 ### Milestone 2: Feature Complete (Week 8)
+
 **Due**: November 30, 2025
 **Status**: Not Started
 **Goal**: All MVP features implemented
 **👤 USER REVIEW REQUIRED**
 
 **Key Features:**
+
 - Maintenance record tracking
 - Maintenance history views
 - Task management (create, complete, recurring)
@@ -83,6 +93,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - All CRUD operations complete
 
 **Success Criteria:**
+
 - All user stories from MVP_SCOPE.md implemented
 - Complete E2E test coverage
 - All features work offline
@@ -91,12 +102,14 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 ---
 
 ### Milestone 3: Launch Ready (Week 12)
+
 **Due**: December 28, 2025
 **Status**: Not Started
 **Goal**: Production-ready application
 **👤 USER REVIEW & LAUNCH DECISION**
 
 **Key Features:**
+
 - PWA configuration (offline support)
 - Service worker implemented
 - Export functionality (JSON, CSV)
@@ -106,6 +119,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - Final polish and bug fixes
 
 **Success Criteria:**
+
 - Lighthouse scores: >90 all categories
 - All E2E tests passing
 - Zero critical bugs
@@ -117,6 +131,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 ## Week-by-Week Plan
 
 ### Week 1: Setup (Current)
+
 - Initialize project
 - Configure all tools
 - Set up database
@@ -124,6 +139,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: Development environment ready
 
 ### Week 2-3: Asset Management
+
 - Implement repositories
 - Build API routes
 - Create UI pages
@@ -131,12 +147,14 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: Asset CRUD complete
 
 ### Week 4: Milestone 1 Review 👤
+
 - User testing (~30 minutes)
 - Visual/UX review
 - Feedback incorporation
 - Bug fixes
 
 ### Week 5-6: Maintenance Tracking
+
 - Maintenance repository
 - API routes
 - UI components
@@ -144,6 +162,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: Maintenance tracking complete
 
 ### Week 7: Task Management
+
 - Task repository
 - Recurring logic
 - Calendar views
@@ -151,12 +170,14 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: Task system complete
 
 ### Week 8: Milestone 2 Review 👤
+
 - User testing (~1 hour)
 - Full feature review
 - Performance check
 - Feedback incorporation
 
 ### Week 9-10: File Management & Polish
+
 - File storage implementation
 - Dashboard widgets
 - UI polish
@@ -164,6 +185,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: All features complete
 
 ### Week 11: PWA & Offline
+
 - Service worker
 - Offline support
 - Export functionality
@@ -171,6 +193,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: PWA ready
 
 ### Week 12: Final Testing & Polish
+
 - Complete E2E suite
 - Performance optimization
 - Accessibility audit
@@ -178,6 +201,7 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 - **Deliverable**: Production build
 
 ### Week 12: Milestone 3 Review & Launch 👤
+
 - Final acceptance testing (~2 hours)
 - Launch decision
 - Deployment
@@ -227,6 +251,7 @@ All of these must pass before code is committed:
 ### What Gets Tested
 
 **Every Feature Must Have:**
+
 1. Unit tests for business logic
 2. Component tests for UI
 3. Integration tests for API routes
@@ -234,6 +259,7 @@ All of these must pass before code is committed:
 5. Accessibility tests
 
 **Before Milestone Review:**
+
 - All tests passing
 - Coverage targets met
 - Build succeeds
@@ -245,10 +271,12 @@ All of these must pass before code is committed:
 ## Labels
 
 **Setup & Config:**
+
 - `setup` - Project setup and configuration
 - `week-1` - Week 1 specific tasks
 
 **Feature Work:**
+
 - `feature` - New feature implementation
 - `enhancement` - Improvement to existing feature
 - `ui` - UI and styling work
@@ -256,6 +284,7 @@ All of these must pass before code is committed:
 - `testing` - Test infrastructure or test writing
 
 **Quality:**
+
 - `bug` - Something isn't working
 - `documentation` - Documentation improvements
 
@@ -264,6 +293,7 @@ All of these must pass before code is committed:
 ## Progress Tracking
 
 **View Roadmap:**
+
 ```bash
 # See all milestones
 gh api repos/cjnemes/HomeMaint/milestones | jq -r '.[] | "\(.title): \(.open_issues) open, \(.closed_issues) closed"'
@@ -276,6 +306,7 @@ gh issue list
 ```
 
 **In GitHub UI:**
+
 - Milestones: https://github.com/cjnemes/HomeMaint/milestones
 - Issues: https://github.com/cjnemes/HomeMaint/issues
 - Project Board: Can be created to visualize progress
@@ -287,6 +318,7 @@ gh issue list
 ### Progress Updates
 
 After completing each issue, Claude will:
+
 1. Close the issue with summary
 2. Update milestone progress
 3. Commit working code
@@ -295,6 +327,7 @@ After completing each issue, Claude will:
 ### Milestone Reviews
 
 Before each milestone review, Claude will provide:
+
 1. **Demo Instructions**: How to run and test
 2. **Feature Checklist**: What's implemented
 3. **Test Report**: Coverage and results
@@ -306,15 +339,18 @@ Before each milestone review, Claude will provide:
 ## Current Status
 
 **✅ Completed:**
+
 - All documentation
 - GitHub milestones created
 - Week 1 issues created
 - Playwright MCP integrated
 
 **🚧 In Progress:**
+
 - Week 1: Project Setup
 
 **📅 Up Next:**
+
 - Begin project initialization (Issue #1)
 
 ---
@@ -322,6 +358,7 @@ Before each milestone review, Claude will provide:
 ## Ready to Start!
 
 Everything is set up for autonomous development:
+
 - ✅ Comprehensive documentation
 - ✅ Clear milestones and issues
 - ✅ Testing strategy defined

@@ -1,4 +1,5 @@
 # Data Model & Schema Design
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -59,23 +60,25 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique user identifier |
-| email | VARCHAR(255) | UNIQUE, NOT NULL | User email (login) |
-| password_hash | VARCHAR(255) | NOT NULL | Hashed password |
-| first_name | VARCHAR(100) | | User's first name |
-| last_name | VARCHAR(100) | | User's last name |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Account creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
-| last_login_at | TIMESTAMP | | Last login timestamp |
-| is_active | BOOLEAN | NOT NULL, DEFAULT TRUE | Account status |
+| Field         | Type         | Constraints             | Description                |
+| ------------- | ------------ | ----------------------- | -------------------------- |
+| id            | UUID/INTEGER | PRIMARY KEY             | Unique user identifier     |
+| email         | VARCHAR(255) | UNIQUE, NOT NULL        | User email (login)         |
+| password_hash | VARCHAR(255) | NOT NULL                | Hashed password            |
+| first_name    | VARCHAR(100) |                         | User's first name          |
+| last_name     | VARCHAR(100) |                         | User's last name           |
+| created_at    | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Account creation timestamp |
+| updated_at    | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Last update timestamp      |
+| last_login_at | TIMESTAMP    |                         | Last login timestamp       |
+| is_active     | BOOLEAN      | NOT NULL, DEFAULT TRUE  | Account status             |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - UNIQUE INDEX: email
 
 **Notes:**
+
 - Not needed for MVP (single-user local version)
 - Required for cloud multi-user version
 
@@ -87,31 +90,33 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique home identifier |
-| user_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to User (NULL for local version) |
-| name | VARCHAR(200) | NOT NULL | Name/identifier for the home |
-| address_line1 | VARCHAR(255) | | Street address |
-| address_line2 | VARCHAR(255) | | Apt/Unit number |
-| city | VARCHAR(100) | | City |
-| state | VARCHAR(50) | | State/Province |
-| postal_code | VARCHAR(20) | | Postal/ZIP code |
-| country | VARCHAR(50) | | Country |
-| year_built | INTEGER | | Year home was built |
-| square_footage | DECIMAL(10,2) | | Total square footage |
-| lot_size | DECIMAL(10,2) | | Lot size in acres or sq ft |
-| purchase_date | DATE | | Date home was purchased |
-| purchase_price | DECIMAL(12,2) | | Purchase price |
-| notes | TEXT | | General notes about the home |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field          | Type          | Constraints             | Description                                |
+| -------------- | ------------- | ----------------------- | ------------------------------------------ |
+| id             | UUID/INTEGER  | PRIMARY KEY             | Unique home identifier                     |
+| user_id        | UUID/INTEGER  | FOREIGN KEY, NULL       | Reference to User (NULL for local version) |
+| name           | VARCHAR(200)  | NOT NULL                | Name/identifier for the home               |
+| address_line1  | VARCHAR(255)  |                         | Street address                             |
+| address_line2  | VARCHAR(255)  |                         | Apt/Unit number                            |
+| city           | VARCHAR(100)  |                         | City                                       |
+| state          | VARCHAR(50)   |                         | State/Province                             |
+| postal_code    | VARCHAR(20)   |                         | Postal/ZIP code                            |
+| country        | VARCHAR(50)   |                         | Country                                    |
+| year_built     | INTEGER       |                         | Year home was built                        |
+| square_footage | DECIMAL(10,2) |                         | Total square footage                       |
+| lot_size       | DECIMAL(10,2) |                         | Lot size in acres or sq ft                 |
+| purchase_date  | DATE          |                         | Date home was purchased                    |
+| purchase_price | DECIMAL(12,2) |                         | Purchase price                             |
+| notes          | TEXT          |                         | General notes about the home               |
+| created_at     | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Record creation timestamp                  |
+| updated_at     | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Last update timestamp                      |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: user_id → User.id
 
 **Notes:**
+
 - For MVP, assume single home per user
 - Future: support multiple homes
 
@@ -123,25 +128,27 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique category identifier |
-| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home |
-| name | VARCHAR(100) | NOT NULL | Category name |
-| description | TEXT | | Category description |
-| icon | VARCHAR(50) | | Icon identifier/emoji |
-| color | VARCHAR(7) | | Hex color code for UI |
-| sort_order | INTEGER | DEFAULT 0 | Display sort order |
-| is_system | BOOLEAN | DEFAULT FALSE | System category (non-deletable) |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field       | Type         | Constraints             | Description                     |
+| ----------- | ------------ | ----------------------- | ------------------------------- |
+| id          | UUID/INTEGER | PRIMARY KEY             | Unique category identifier      |
+| home_id     | UUID/INTEGER | FOREIGN KEY, NOT NULL   | Reference to Home               |
+| name        | VARCHAR(100) | NOT NULL                | Category name                   |
+| description | TEXT         |                         | Category description            |
+| icon        | VARCHAR(50)  |                         | Icon identifier/emoji           |
+| color       | VARCHAR(7)   |                         | Hex color code for UI           |
+| sort_order  | INTEGER      | DEFAULT 0               | Display sort order              |
+| is_system   | BOOLEAN      | DEFAULT FALSE           | System category (non-deletable) |
+| created_at  | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Record creation timestamp       |
+| updated_at  | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Last update timestamp           |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: home_id → Home.id
 - INDEX: (home_id, sort_order)
 
 **Default Categories:**
+
 - HVAC (Heating, Ventilation, Air Conditioning)
 - Plumbing
 - Electrical
@@ -162,23 +169,25 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique location identifier |
-| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home |
-| name | VARCHAR(100) | NOT NULL | Location name (e.g., "Master Bedroom", "Garage") |
-| description | TEXT | | Location description |
-| floor_level | INTEGER | | Floor level (0=basement, 1=first floor, etc.) |
-| parent_location_id | UUID/INTEGER | FOREIGN KEY, NULL | Parent location (for nested locations) |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field              | Type         | Constraints             | Description                                      |
+| ------------------ | ------------ | ----------------------- | ------------------------------------------------ |
+| id                 | UUID/INTEGER | PRIMARY KEY             | Unique location identifier                       |
+| home_id            | UUID/INTEGER | FOREIGN KEY, NOT NULL   | Reference to Home                                |
+| name               | VARCHAR(100) | NOT NULL                | Location name (e.g., "Master Bedroom", "Garage") |
+| description        | TEXT         |                         | Location description                             |
+| floor_level        | INTEGER      |                         | Floor level (0=basement, 1=first floor, etc.)    |
+| parent_location_id | UUID/INTEGER | FOREIGN KEY, NULL       | Parent location (for nested locations)           |
+| created_at         | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Record creation timestamp                        |
+| updated_at         | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Last update timestamp                            |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: home_id → Home.id
 - FOREIGN KEY: parent_location_id → Location.id
 
 **Examples:**
+
 - Kitchen
 - Master Bedroom
 - Guest Bathroom
@@ -195,35 +204,36 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique asset identifier |
-| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home |
-| category_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to Category |
-| location_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to Location |
-| parent_asset_id | UUID/INTEGER | FOREIGN KEY, NULL | Parent asset (for hierarchical systems) |
-| name | VARCHAR(200) | NOT NULL | Asset name/description |
-| manufacturer | VARCHAR(100) | | Manufacturer/brand name |
-| model_number | VARCHAR(100) | | Model number |
-| serial_number | VARCHAR(100) | | Serial number |
-| year_manufactured | INTEGER | | Year of manufacture |
-| purchase_date | DATE | | Date purchased |
-| installation_date | DATE | | Date installed |
-| purchase_price | DECIMAL(10,2) | | Purchase price |
-| warranty_duration_months | INTEGER | | Warranty duration in months |
-| warranty_expiration_date | DATE | | Calculated or manual warranty expiration |
-| expected_lifespan_years | INTEGER | | Expected lifespan in years |
-| estimated_replacement_date | DATE | | Estimated replacement date |
-| estimated_replacement_cost | DECIMAL(10,2) | | Estimated replacement cost |
-| energy_rating | VARCHAR(20) | | Energy efficiency rating |
-| capacity | VARCHAR(50) | | Capacity/size (e.g., "5 tons", "50 gallons") |
-| notes | TEXT | | Additional notes |
-| status | VARCHAR(20) | DEFAULT 'active' | Status: active, retired, replaced, broken |
-| custom_fields | JSON/TEXT | | Custom key-value pairs for flexibility |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field                      | Type          | Constraints             | Description                                  |
+| -------------------------- | ------------- | ----------------------- | -------------------------------------------- |
+| id                         | UUID/INTEGER  | PRIMARY KEY             | Unique asset identifier                      |
+| home_id                    | UUID/INTEGER  | FOREIGN KEY, NOT NULL   | Reference to Home                            |
+| category_id                | UUID/INTEGER  | FOREIGN KEY, NULL       | Reference to Category                        |
+| location_id                | UUID/INTEGER  | FOREIGN KEY, NULL       | Reference to Location                        |
+| parent_asset_id            | UUID/INTEGER  | FOREIGN KEY, NULL       | Parent asset (for hierarchical systems)      |
+| name                       | VARCHAR(200)  | NOT NULL                | Asset name/description                       |
+| manufacturer               | VARCHAR(100)  |                         | Manufacturer/brand name                      |
+| model_number               | VARCHAR(100)  |                         | Model number                                 |
+| serial_number              | VARCHAR(100)  |                         | Serial number                                |
+| year_manufactured          | INTEGER       |                         | Year of manufacture                          |
+| purchase_date              | DATE          |                         | Date purchased                               |
+| installation_date          | DATE          |                         | Date installed                               |
+| purchase_price             | DECIMAL(10,2) |                         | Purchase price                               |
+| warranty_duration_months   | INTEGER       |                         | Warranty duration in months                  |
+| warranty_expiration_date   | DATE          |                         | Calculated or manual warranty expiration     |
+| expected_lifespan_years    | INTEGER       |                         | Expected lifespan in years                   |
+| estimated_replacement_date | DATE          |                         | Estimated replacement date                   |
+| estimated_replacement_cost | DECIMAL(10,2) |                         | Estimated replacement cost                   |
+| energy_rating              | VARCHAR(20)   |                         | Energy efficiency rating                     |
+| capacity                   | VARCHAR(50)   |                         | Capacity/size (e.g., "5 tons", "50 gallons") |
+| notes                      | TEXT          |                         | Additional notes                             |
+| status                     | VARCHAR(20)   | DEFAULT 'active'        | Status: active, retired, replaced, broken    |
+| custom_fields              | JSON/TEXT     |                         | Custom key-value pairs for flexibility       |
+| created_at                 | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Record creation timestamp                    |
+| updated_at                 | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Last update timestamp                        |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: home_id → Home.id
 - FOREIGN KEY: category_id → Category.id
@@ -233,6 +243,7 @@ This document defines the data model and database schema for HomeMaint. The sche
 - INDEX: (home_id, status)
 
 **Status Values:**
+
 - active: Currently in use
 - retired: No longer in use but kept for records
 - replaced: Replaced by another asset
@@ -246,25 +257,26 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique maintenance record identifier |
-| asset_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Asset |
-| service_provider_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to ServiceProvider |
-| date_performed | DATE | NOT NULL | Date maintenance was performed |
-| maintenance_type | VARCHAR(50) | NOT NULL | Type: routine, repair, inspection, replacement, emergency |
-| title | VARCHAR(200) | NOT NULL | Brief title/summary |
-| description | TEXT | | Detailed description of work performed |
-| cost | DECIMAL(10,2) | | Cost of maintenance |
-| performed_by | VARCHAR(100) | | Who performed (DIY, company name, etc.) |
-| parts_used | TEXT | | Parts/materials used |
-| next_service_date | DATE | | Recommended next service date |
-| warranty_work | BOOLEAN | DEFAULT FALSE | Was this warranty work? |
-| notes | TEXT | | Additional notes |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field               | Type          | Constraints             | Description                                               |
+| ------------------- | ------------- | ----------------------- | --------------------------------------------------------- |
+| id                  | UUID/INTEGER  | PRIMARY KEY             | Unique maintenance record identifier                      |
+| asset_id            | UUID/INTEGER  | FOREIGN KEY, NOT NULL   | Reference to Asset                                        |
+| service_provider_id | UUID/INTEGER  | FOREIGN KEY, NULL       | Reference to ServiceProvider                              |
+| date_performed      | DATE          | NOT NULL                | Date maintenance was performed                            |
+| maintenance_type    | VARCHAR(50)   | NOT NULL                | Type: routine, repair, inspection, replacement, emergency |
+| title               | VARCHAR(200)  | NOT NULL                | Brief title/summary                                       |
+| description         | TEXT          |                         | Detailed description of work performed                    |
+| cost                | DECIMAL(10,2) |                         | Cost of maintenance                                       |
+| performed_by        | VARCHAR(100)  |                         | Who performed (DIY, company name, etc.)                   |
+| parts_used          | TEXT          |                         | Parts/materials used                                      |
+| next_service_date   | DATE          |                         | Recommended next service date                             |
+| warranty_work       | BOOLEAN       | DEFAULT FALSE           | Was this warranty work?                                   |
+| notes               | TEXT          |                         | Additional notes                                          |
+| created_at          | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Record creation timestamp                                 |
+| updated_at          | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Last update timestamp                                     |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: asset_id → Asset.id
 - FOREIGN KEY: service_provider_id → ServiceProvider.id
@@ -272,6 +284,7 @@ This document defines the data model and database schema for HomeMaint. The sche
 - INDEX: (date_performed DESC)
 
 **Maintenance Types:**
+
 - routine: Regular scheduled maintenance
 - repair: Fix something broken
 - inspection: Inspection/assessment
@@ -288,26 +301,27 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique task identifier |
-| asset_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Asset |
-| title | VARCHAR(200) | NOT NULL | Task title |
-| description | TEXT | | Task description |
-| due_date | DATE | | When task is due |
-| priority | VARCHAR(20) | DEFAULT 'medium' | Priority: low, medium, high, critical |
-| estimated_cost | DECIMAL(10,2) | | Estimated cost |
-| estimated_duration | INTEGER | | Estimated duration in minutes |
-| recurrence_rule | VARCHAR(100) | | Recurrence pattern (RRULE format or simple) |
-| is_recurring | BOOLEAN | DEFAULT FALSE | Is this a recurring task? |
-| status | VARCHAR(20) | DEFAULT 'pending' | Status: pending, in_progress, completed, cancelled, overdue |
-| completed_date | DATE | | Date completed |
-| completed_maintenance_record_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to completed MaintenanceRecord |
-| notes | TEXT | | Additional notes |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field                           | Type          | Constraints             | Description                                                 |
+| ------------------------------- | ------------- | ----------------------- | ----------------------------------------------------------- |
+| id                              | UUID/INTEGER  | PRIMARY KEY             | Unique task identifier                                      |
+| asset_id                        | UUID/INTEGER  | FOREIGN KEY, NOT NULL   | Reference to Asset                                          |
+| title                           | VARCHAR(200)  | NOT NULL                | Task title                                                  |
+| description                     | TEXT          |                         | Task description                                            |
+| due_date                        | DATE          |                         | When task is due                                            |
+| priority                        | VARCHAR(20)   | DEFAULT 'medium'        | Priority: low, medium, high, critical                       |
+| estimated_cost                  | DECIMAL(10,2) |                         | Estimated cost                                              |
+| estimated_duration              | INTEGER       |                         | Estimated duration in minutes                               |
+| recurrence_rule                 | VARCHAR(100)  |                         | Recurrence pattern (RRULE format or simple)                 |
+| is_recurring                    | BOOLEAN       | DEFAULT FALSE           | Is this a recurring task?                                   |
+| status                          | VARCHAR(20)   | DEFAULT 'pending'       | Status: pending, in_progress, completed, cancelled, overdue |
+| completed_date                  | DATE          |                         | Date completed                                              |
+| completed_maintenance_record_id | UUID/INTEGER  | FOREIGN KEY, NULL       | Reference to completed MaintenanceRecord                    |
+| notes                           | TEXT          |                         | Additional notes                                            |
+| created_at                      | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Record creation timestamp                                   |
+| updated_at                      | TIMESTAMP     | NOT NULL, DEFAULT NOW() | Last update timestamp                                       |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: asset_id → Asset.id
 - FOREIGN KEY: completed_maintenance_record_id → MaintenanceRecord.id
@@ -316,12 +330,14 @@ This document defines the data model and database schema for HomeMaint. The sche
 - INDEX: (due_date)
 
 **Priority Values:**
+
 - low: Can wait
 - medium: Normal priority
 - high: Should be done soon
 - critical: Urgent, safety issue
 
 **Status Values:**
+
 - pending: Not yet started
 - in_progress: Currently being worked on
 - completed: Done
@@ -329,6 +345,7 @@ This document defines the data model and database schema for HomeMaint. The sche
 - overdue: Past due date
 
 **Recurrence Examples:**
+
 - "FREQ=MONTHLY;INTERVAL=3" (every 3 months)
 - "FREQ=YEARLY" (annually)
 - Or simple: "monthly", "quarterly", "annually"
@@ -341,30 +358,31 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique provider identifier |
-| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home |
-| company_name | VARCHAR(200) | NOT NULL | Company/business name |
-| contact_name | VARCHAR(100) | | Primary contact person |
-| phone | VARCHAR(20) | | Phone number |
-| email | VARCHAR(255) | | Email address |
-| website | VARCHAR(255) | | Website URL |
-| address_line1 | VARCHAR(255) | | Street address |
-| address_line2 | VARCHAR(255) | | Suite/Unit |
-| city | VARCHAR(100) | | City |
-| state | VARCHAR(50) | | State/Province |
-| postal_code | VARCHAR(20) | | Postal code |
-| service_types | TEXT | | Types of services offered |
-| license_number | VARCHAR(100) | | License/certification number |
-| insurance_info | TEXT | | Insurance information |
-| rating | DECIMAL(2,1) | | Personal rating (1-5) |
-| notes | TEXT | | Notes about provider |
-| is_preferred | BOOLEAN | DEFAULT FALSE | Preferred provider flag |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Record creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field          | Type         | Constraints             | Description                  |
+| -------------- | ------------ | ----------------------- | ---------------------------- |
+| id             | UUID/INTEGER | PRIMARY KEY             | Unique provider identifier   |
+| home_id        | UUID/INTEGER | FOREIGN KEY, NOT NULL   | Reference to Home            |
+| company_name   | VARCHAR(200) | NOT NULL                | Company/business name        |
+| contact_name   | VARCHAR(100) |                         | Primary contact person       |
+| phone          | VARCHAR(20)  |                         | Phone number                 |
+| email          | VARCHAR(255) |                         | Email address                |
+| website        | VARCHAR(255) |                         | Website URL                  |
+| address_line1  | VARCHAR(255) |                         | Street address               |
+| address_line2  | VARCHAR(255) |                         | Suite/Unit                   |
+| city           | VARCHAR(100) |                         | City                         |
+| state          | VARCHAR(50)  |                         | State/Province               |
+| postal_code    | VARCHAR(20)  |                         | Postal code                  |
+| service_types  | TEXT         |                         | Types of services offered    |
+| license_number | VARCHAR(100) |                         | License/certification number |
+| insurance_info | TEXT         |                         | Insurance information        |
+| rating         | DECIMAL(2,1) |                         | Personal rating (1-5)        |
+| notes          | TEXT         |                         | Notes about provider         |
+| is_preferred   | BOOLEAN      | DEFAULT FALSE           | Preferred provider flag      |
+| created_at     | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Record creation timestamp    |
+| updated_at     | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Last update timestamp        |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: home_id → Home.id
 - INDEX: (home_id, company_name)
@@ -377,25 +395,26 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Fields:**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique attachment identifier |
-| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home |
-| asset_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to Asset (if associated) |
-| maintenance_record_id | UUID/INTEGER | FOREIGN KEY, NULL | Reference to MaintenanceRecord (if associated) |
-| file_name | VARCHAR(255) | NOT NULL | Original file name |
-| file_path | VARCHAR(500) | NOT NULL | Path/URL to file |
-| file_size | INTEGER | | File size in bytes |
-| mime_type | VARCHAR(100) | | MIME type (image/jpeg, application/pdf, etc.) |
-| file_type | VARCHAR(20) | | Type: photo, manual, receipt, warranty, other |
-| description | TEXT | | Description of attachment |
-| taken_date | DATE | | Date photo was taken or document created |
-| thumbnail_path | VARCHAR(500) | | Path to thumbnail (for images) |
-| metadata | JSON/TEXT | | Additional metadata (EXIF, etc.) |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Upload timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+| Field                 | Type         | Constraints             | Description                                    |
+| --------------------- | ------------ | ----------------------- | ---------------------------------------------- |
+| id                    | UUID/INTEGER | PRIMARY KEY             | Unique attachment identifier                   |
+| home_id               | UUID/INTEGER | FOREIGN KEY, NOT NULL   | Reference to Home                              |
+| asset_id              | UUID/INTEGER | FOREIGN KEY, NULL       | Reference to Asset (if associated)             |
+| maintenance_record_id | UUID/INTEGER | FOREIGN KEY, NULL       | Reference to MaintenanceRecord (if associated) |
+| file_name             | VARCHAR(255) | NOT NULL                | Original file name                             |
+| file_path             | VARCHAR(500) | NOT NULL                | Path/URL to file                               |
+| file_size             | INTEGER      |                         | File size in bytes                             |
+| mime_type             | VARCHAR(100) |                         | MIME type (image/jpeg, application/pdf, etc.)  |
+| file_type             | VARCHAR(20)  |                         | Type: photo, manual, receipt, warranty, other  |
+| description           | TEXT         |                         | Description of attachment                      |
+| taken_date            | DATE         |                         | Date photo was taken or document created       |
+| thumbnail_path        | VARCHAR(500) |                         | Path to thumbnail (for images)                 |
+| metadata              | JSON/TEXT    |                         | Additional metadata (EXIF, etc.)               |
+| created_at            | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Upload timestamp                               |
+| updated_at            | TIMESTAMP    | NOT NULL, DEFAULT NOW() | Last update timestamp                          |
 
 **Indexes:**
+
 - PRIMARY KEY: id
 - FOREIGN KEY: home_id → Home.id
 - FOREIGN KEY: asset_id → Asset.id
@@ -404,6 +423,7 @@ This document defines the data model and database schema for HomeMaint. The sche
 - INDEX: (maintenance_record_id, created_at DESC)
 
 **File Types:**
+
 - photo: Photographs
 - manual: User manuals, documentation
 - receipt: Purchase receipts
@@ -412,6 +432,7 @@ This document defines the data model and database schema for HomeMaint. The sche
 - other: Miscellaneous
 
 **Constraints:**
+
 - Must have either asset_id OR maintenance_record_id (or both)
 - CHECK constraint to ensure at least one is not NULL
 
@@ -423,19 +444,19 @@ This document defines the data model and database schema for HomeMaint. The sche
 
 **Purpose:** Custom tags for organizing/filtering assets
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| id | UUID/INTEGER | PRIMARY KEY | Unique tag identifier |
-| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home |
-| name | VARCHAR(50) | NOT NULL | Tag name |
-| color | VARCHAR(7) | | Hex color code |
+| Field   | Type         | Constraints           | Description           |
+| ------- | ------------ | --------------------- | --------------------- |
+| id      | UUID/INTEGER | PRIMARY KEY           | Unique tag identifier |
+| home_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Home     |
+| name    | VARCHAR(50)  | NOT NULL              | Tag name              |
+| color   | VARCHAR(7)   |                       | Hex color code        |
 
 **Join Table: AssetTag**
 
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
+| Field    | Type         | Constraints           | Description        |
+| -------- | ------------ | --------------------- | ------------------ |
 | asset_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Asset |
-| tag_id | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Tag |
+| tag_id   | UUID/INTEGER | FOREIGN KEY, NOT NULL | Reference to Tag   |
 
 ---
 
@@ -690,12 +711,12 @@ END;
   "serial_number": "4218C12345",
   "year_manufactured": 2018,
   "installation_date": "2018-06-15",
-  "purchase_price": 4500.00,
+  "purchase_price": 4500.0,
   "warranty_duration_months": 120,
   "warranty_expiration_date": "2028-06-15",
   "expected_lifespan_years": 15,
   "estimated_replacement_date": "2033-06-15",
-  "estimated_replacement_cost": 6000.00,
+  "estimated_replacement_cost": 6000.0,
   "energy_rating": "SEER 16",
   "capacity": "3 tons",
   "notes": "Annual maintenance required. Filter in attic should be changed monthly.",
@@ -714,7 +735,7 @@ END;
   "maintenance_type": "routine",
   "title": "Annual HVAC Maintenance",
   "description": "Inspected system, cleaned coils, checked refrigerant levels, tested all functions. System operating normally.",
-  "cost": 149.00,
+  "cost": 149.0,
   "performed_by": "ABC Heating & Cooling",
   "parts_used": "Air filter (16x25x1)",
   "next_service_date": "2025-04-15",
@@ -733,7 +754,7 @@ END;
   "description": "Replace 16x25x1 air filter in attic",
   "due_date": "2024-11-01",
   "priority": "medium",
-  "estimated_cost": 15.00,
+  "estimated_cost": 15.0,
   "estimated_duration": 10,
   "recurrence_rule": "FREQ=MONTHLY",
   "is_recurring": true,
@@ -746,6 +767,7 @@ END;
 ## 7. Data Validation Rules
 
 ### Asset Validation
+
 - Name is required (max 200 chars)
 - Status must be one of: active, retired, replaced, broken
 - If purchase_date is set, it should be <= today
@@ -753,12 +775,14 @@ END;
 - If expected_lifespan_years is set, auto-calculate estimated_replacement_date
 
 ### Maintenance Record Validation
+
 - date_performed is required and should be <= today
 - maintenance_type must be one of: routine, repair, inspection, replacement, emergency, upgrade, cleaning
 - cost should be >= 0
 - Must reference a valid asset
 
 ### Maintenance Task Validation
+
 - Title is required
 - Priority must be one of: low, medium, high, critical
 - Status must be one of: pending, in_progress, completed, cancelled, overdue
@@ -766,6 +790,7 @@ END;
 - estimated_cost should be >= 0
 
 ### Attachment Validation
+
 - Must reference either asset_id OR maintenance_record_id (or both)
 - file_name and file_path are required
 - MIME type should match file extension
@@ -776,12 +801,14 @@ END;
 ## 8. Data Migration Considerations
 
 ### From Spreadsheet
+
 - Map columns to asset fields
 - Parse dates carefully (various formats)
 - Handle missing data gracefully
 - Create default category if none specified
 
 ### Export Formats
+
 - CSV: One row per asset with flattened relationships
 - JSON: Full hierarchical structure
 - PDF: Formatted report with images
@@ -792,12 +819,14 @@ END;
 ## 9. Data Retention & Archival
 
 ### Retention Policy
+
 - Active assets: Indefinite
 - Retired assets: Keep for tax/warranty purposes (7 years recommended)
 - Maintenance records: Keep indefinitely for historical value
 - Attachments: Keep as long as associated asset/record exists
 
 ### Archival Strategy
+
 - Soft delete (set status to 'retired' instead of DELETE)
 - Archive old records to separate table after N years
 - Provide export before archival
@@ -808,6 +837,7 @@ END;
 ## 10. Performance Optimization
 
 ### Indexing Strategy
+
 - Index all foreign keys
 - Composite indexes for common queries:
   - (home_id, category_id) for filtered asset lists
@@ -815,12 +845,14 @@ END;
   - (due_date, status) for task lists
 
 ### Query Optimization
+
 - Use pagination for large lists (100 records per page)
 - Lazy load attachments
 - Cache category/location lookups
 - Denormalize computed fields (warranty_expiration_date)
 
 ### Storage Optimization
+
 - Compress images before storage
 - Limit file attachment sizes
 - Clean up orphaned files
@@ -831,6 +863,7 @@ END;
 ## 11. Future Enhancements
 
 ### Phase 2 Schema Additions
+
 - **Activity Log**: Track all changes for audit trail
 - **Notifications**: Stored notification preferences and history
 - **Custom Fields per Category**: Define custom fields at category level
@@ -838,6 +871,7 @@ END;
 - **Insurance Items**: Flag items for insurance inventory
 
 ### Phase 3 Schema Additions
+
 - **Multi-User**: Share home access with family
 - **Permissions**: Role-based access control
 - **Versioning**: Track asset/maintenance record versions

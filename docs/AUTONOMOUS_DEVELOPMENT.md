@@ -1,4 +1,5 @@
 # Autonomous Development Workflow
+
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
 **Version:** 1.0
@@ -16,6 +17,7 @@ This document outlines how development will proceed autonomously with Claude han
 ## 2. Autonomous Development Philosophy
 
 **Claude Handles:**
+
 - ✅ All code implementation
 - ✅ All automated testing (unit, integration, E2E)
 - ✅ Running tests and verifying they pass
@@ -26,6 +28,7 @@ This document outlines how development will proceed autonomously with Claude han
 - ✅ Bug fixes based on test failures
 
 **User Handles:**
+
 - ✅ Visual/UX review at milestones (Week 4, 8, 12)
 - ✅ User acceptance testing
 - ✅ Feedback on features
@@ -38,6 +41,7 @@ This document outlines how development will proceed autonomously with Claude han
 ### 3.1 Core Stack
 
 **Framework: Next.js 14+ with App Router**
+
 - Full-stack React framework
 - Built-in API routes (no separate backend needed)
 - Server-side rendering + static generation
@@ -45,42 +49,50 @@ This document outlines how development will proceed autonomously with Claude han
 - **Why**: Single application I can fully test without browser interaction
 
 **Database: better-sqlite3 (Node.js)**
+
 - SQLite in Node.js (not browser)
 - Synchronous API (easier to test)
 - File-based database
 - **Why**: I can run actual database operations in tests, verify queries work
 
 **Language: TypeScript (Strict Mode)**
+
 - Type safety throughout
 - Catch errors at compile time
 - **Why**: Reduces runtime errors, better IDE support
 
 **Styling: Tailwind CSS + shadcn/ui**
+
 - Utility-first CSS
 - Copy-paste components
 - **Why**: Consistent styling, no runtime CSS-in-JS overhead
 
 **State Management: Zustand**
+
 - Simple, lightweight
 - TypeScript-first
 - **Why**: Easy to test, minimal boilerplate
 
 **Forms: React Hook Form + Zod**
+
 - Type-safe form validation
 - **Why**: Validation rules testable, great DX
 
 ### 3.2 Testing Stack
 
 **Unit & Integration Tests: Vitest**
+
 - Vite-native test runner
 - Fast, watch mode
 - **Why**: Can run all tests via bash, get immediate feedback
 
 **Component Tests: React Testing Library**
+
 - Test behavior, not implementation
 - **Why**: Verify components work without browser
 
 **E2E Tests: Playwright + Playwright MCP**
+
 - Headless browser testing via Playwright
 - Browser automation via Playwright MCP (Claude Code integration)
   - Navigate pages, fill forms, click buttons
@@ -91,6 +103,7 @@ This document outlines how development will proceed autonomously with Claude han
 - **Why**: Can verify full user flows and visual output autonomously
 
 **Coverage: c8 (built into Vitest)**
+
 - Track code coverage
 - **Why**: Ensure high test coverage
 
@@ -135,6 +148,7 @@ This document outlines how development will proceed autonomously with Claude han
 **Without Opening Browser:**
 
 1. **Database Operations**
+
    ```bash
    # I can run these and see actual results
    npm run test -- db/repositories
@@ -142,6 +156,7 @@ This document outlines how development will proceed autonomously with Claude han
    ```
 
 2. **API Routes**
+
    ```bash
    # I can test API endpoints
    npm run test -- app/api
@@ -149,6 +164,7 @@ This document outlines how development will proceed autonomously with Claude han
    ```
 
 3. **React Components**
+
    ```bash
    # I can verify components render correctly
    npm run test -- components
@@ -156,6 +172,7 @@ This document outlines how development will proceed autonomously with Claude han
    ```
 
 4. **Full User Flows**
+
    ```bash
    # I can run E2E tests headlessly
    npm run test:e2e
@@ -176,7 +193,9 @@ This document outlines how development will proceed autonomously with Claude han
 ## 5. Milestone Review Process
 
 ### Milestone 1: Week 4 - Core Foundation
+
 **I Complete:**
+
 - Database layer with migrations
 - API routes for assets CRUD
 - Basic asset list and detail pages
@@ -184,6 +203,7 @@ This document outlines how development will proceed autonomously with Claude han
 - All tests passing ✅
 
 **You Review:**
+
 - Open `http://localhost:3000`
 - Test adding an asset via UI
 - Visual review of design
@@ -191,7 +211,9 @@ This document outlines how development will proceed autonomously with Claude han
 - ~30 minutes testing
 
 ### Milestone 2: Week 8 - Feature Complete
+
 **I Complete:**
+
 - All MVP features implemented
 - Maintenance tracking
 - Task management
@@ -199,13 +221,16 @@ This document outlines how development will proceed autonomously with Claude han
 - All tests passing ✅
 
 **You Review:**
+
 - Test all major user flows
 - Visual polish feedback
 - Performance check
 - ~1 hour testing
 
 ### Milestone 3: Week 12 - Launch Ready
+
 **I Complete:**
+
 - All features polished
 - PWA configured
 - Export functionality
@@ -213,6 +238,7 @@ This document outlines how development will proceed autonomously with Claude han
 - Production build ready
 
 **You Review:**
+
 - Full acceptance testing
 - Cross-device testing
 - Final UX review
@@ -270,10 +296,7 @@ export async function GET(request: NextRequest) {
     const assets = await assetRepository.findAll();
     return NextResponse.json(assets);
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to fetch assets' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch assets' }, { status: 500 });
   }
 }
 
@@ -283,15 +306,13 @@ export async function POST(request: NextRequest) {
     const asset = await assetRepository.create(body);
     return NextResponse.json(asset, { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to create asset' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Failed to create asset' }, { status: 400 });
   }
 }
 ```
 
 **Test:**
+
 ```typescript
 // tests/integration/api/assets.test.ts
 import { GET, POST } from '@/app/api/assets/route';
@@ -334,6 +355,7 @@ describe('Assets API', () => {
 ### 7.1 Test Coverage Requirements
 
 **Minimum Coverage:**
+
 - Overall: 85% (higher than typical because I'm testing everything)
 - API Routes: 95% (critical path)
 - Database Layer: 95% (data integrity)
@@ -343,6 +365,7 @@ describe('Assets API', () => {
 ### 7.2 What I Test Automatically
 
 **✅ Database Operations**
+
 ```typescript
 describe('AssetRepository', () => {
   beforeEach(() => {
@@ -367,6 +390,7 @@ describe('AssetRepository', () => {
 ```
 
 **✅ Business Logic**
+
 ```typescript
 describe('Asset Calculations', () => {
   it('should calculate warranty expiration correctly', () => {
@@ -383,12 +407,15 @@ describe('Asset Calculations', () => {
 ```
 
 **✅ API Endpoints**
+
 ```typescript
 describe('Asset API', () => {
   it('should handle validation errors', async () => {
-    const response = await POST(new NextRequest('...', {
-      body: JSON.stringify({ name: '' }), // Invalid
-    }));
+    const response = await POST(
+      new NextRequest('...', {
+        body: JSON.stringify({ name: '' }), // Invalid
+      })
+    );
 
     expect(response.status).toBe(400);
     // I verify error handling works!
@@ -397,6 +424,7 @@ describe('Asset API', () => {
 ```
 
 **✅ React Components**
+
 ```typescript
 describe('AssetCard', () => {
   it('should render asset information', () => {
@@ -410,6 +438,7 @@ describe('AssetCard', () => {
 ```
 
 **✅ User Flows**
+
 ```typescript
 test('user can add new asset', async ({ page }) => {
   await page.goto('http://localhost:3000');
@@ -430,6 +459,7 @@ test('user can add new asset', async ({ page }) => {
 ### 8.1 Pre-Commit Checks (Automated)
 
 Every commit automatically verifies:
+
 ```bash
 # 1. TypeScript compiles
 npm run type-check
@@ -474,6 +504,7 @@ jobs:
 ## 9. Development Timeline (Autonomous)
 
 ### Week 1: Project Setup
+
 - [x] Initialize Next.js project
 - [x] Configure TypeScript, ESLint, Prettier
 - [x] Set up Tailwind CSS + shadcn/ui
@@ -485,6 +516,7 @@ jobs:
 **Verification:** All setup tests pass ✅
 
 ### Week 2-3: Asset Management
+
 - [ ] Implement asset repository
 - [ ] Create asset API routes
 - [ ] Build asset list page
@@ -496,6 +528,7 @@ jobs:
 ### Week 4: **MILESTONE 1 - User Review**
 
 ### Week 5-6: Maintenance Tracking
+
 - [ ] Implement maintenance repository
 - [ ] Create maintenance API routes
 - [ ] Build maintenance timeline
@@ -504,6 +537,7 @@ jobs:
 - [ ] All tests pass ✅
 
 ### Week 7-8: Task Management
+
 - [ ] Implement task repository
 - [ ] Create task API routes
 - [ ] Build task list/calendar
@@ -515,6 +549,7 @@ jobs:
 ### Week 8: **MILESTONE 2 - User Review**
 
 ### Week 9-10: File Management & Polish
+
 - [ ] Implement file storage
 - [ ] File upload/download
 - [ ] Export functionality
@@ -523,6 +558,7 @@ jobs:
 - [ ] All tests pass ✅
 
 ### Week 11: PWA & Offline
+
 - [ ] Configure PWA
 - [ ] Offline support
 - [ ] Service worker
@@ -530,6 +566,7 @@ jobs:
 - [ ] All tests pass ✅
 
 ### Week 12: Final Testing & Polish
+
 - [ ] Complete E2E test suite
 - [ ] Performance optimization
 - [ ] Accessibility audit
@@ -545,6 +582,7 @@ jobs:
 ### 10.1 Progress Updates
 
 After each major feature, I'll provide:
+
 ```
 ✅ Feature: Asset CRUD Operations
 - Implemented: Repository, API routes, UI pages
@@ -559,6 +597,7 @@ After each major feature, I'll provide:
 ### 10.2 When I Need Input
 
 I'll only ask for input if:
+
 1. **Ambiguity in requirements** - Need clarification on feature behavior
 2. **Major architectural decision** - Affects multiple features
 3. **Blocked by external factor** - Can't proceed without decision
@@ -568,6 +607,7 @@ Otherwise, I proceed autonomously based on documentation.
 ### 10.3 Milestone Reviews
 
 At each milestone, I'll provide:
+
 - Demo instructions (how to run locally)
 - Feature checklist (what's implemented)
 - Test report (coverage, passing tests)
@@ -575,6 +615,7 @@ At each milestone, I'll provide:
 - Next steps
 
 You provide:
+
 - Visual/UX feedback
 - Feature acceptance
 - Priority adjustments (if needed)
@@ -584,6 +625,7 @@ You provide:
 ## 11. Advantages of This Approach
 
 ### For You:
+
 ✅ Minimal time investment (only milestone reviews)
 ✅ High confidence (comprehensive automated testing)
 ✅ Fast development (no waiting for manual testing between features)
@@ -591,6 +633,7 @@ You provide:
 ✅ Working software at every milestone
 
 ### For Me:
+
 ✅ Can verify everything works without browser
 ✅ Immediate feedback from tests
 ✅ Can refactor with confidence (tests catch regressions)
@@ -603,6 +646,7 @@ You provide:
 
 **Risk:** Visual/UX issues not caught until milestone
 **Mitigation:**
+
 - Follow design system strictly
 - Use established component library (shadcn/ui)
 - Implement exactly per wireframes
@@ -610,18 +654,21 @@ You provide:
 
 **Risk:** Feature doesn't meet expectations
 **Mitigation:**
+
 - Clear user stories with acceptance criteria
 - Implement exactly as documented
 - Comprehensive E2E tests verify user stories
 
 **Risk:** Performance issues
 **Mitigation:**
+
 - Performance tests in CI/CD
 - Lighthouse scores in automated tests
 - Optimize as I build (not after)
 
 **Risk:** Technical blocker
 **Mitigation:**
+
 - Communicate immediately
 - Provide options with tradeoffs
 - Document decision
@@ -631,6 +678,7 @@ You provide:
 ## 13. Success Criteria
 
 **For Each Feature:**
+
 - ✅ All tests pass (unit, integration, E2E)
 - ✅ Type checking passes (no TypeScript errors)
 - ✅ Linting passes (no ESLint errors)
@@ -639,12 +687,14 @@ You provide:
 - ✅ Committed and pushed to GitHub
 
 **For Each Milestone:**
+
 - ✅ All features from milestone completed
 - ✅ User review completed
 - ✅ Feedback incorporated
 - ✅ Approved to proceed
 
 **For Launch:**
+
 - ✅ All MVP features complete
 - ✅ All tests passing
 - ✅ Production build verified
@@ -656,6 +706,7 @@ You provide:
 ## 14. What You Need to Do
 
 ### One-Time Setup (Before I Start)
+
 ```bash
 # 1. Clone repository
 git clone https://github.com/cjnemes/HomeMaint.git
@@ -668,6 +719,7 @@ npm install
 ```
 
 ### At Each Milestone
+
 ```bash
 # 1. Pull latest code
 git pull origin main
@@ -739,17 +791,20 @@ npm run dev
 ## 16. Summary
 
 **This approach lets me:**
+
 - Develop completely autonomously
 - Verify everything works through automated tests
 - Deliver working, tested features continuously
 - Catch bugs immediately (not at milestone)
 
 **You only need to:**
+
 - Review visual/UX at 3 milestones
 - Provide feedback
 - Approve to proceed
 
 **Result:**
+
 - High-quality application
 - Minimal time investment
 - Fast development
