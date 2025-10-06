@@ -30,19 +30,33 @@ This project is currently in the planning phase. Core documentation has been com
 
 Documentation for getting started will be added as development progresses.
 
-## Technology Stack (Planned)
+## Technology Stack
 
-**Frontend:**
-- React 18 + TypeScript
-- Vite (build tool)
-- shadcn/ui (UI components)
-- SQLite (local database)
+**Framework:**
+- Next.js 14+ (full-stack React framework)
+- TypeScript 5+ (strict mode)
+
+**Database:**
+- better-sqlite3 (SQLite for Node.js)
+- Local file-based storage
+
+**UI:**
+- Tailwind CSS + shadcn/ui
+- Responsive design (mobile-first)
 
 **Deployment:**
 - Progressive Web App (PWA)
 - Self-hosted / Local-first
 
 See [Technical Architecture](docs/TECHNICAL_ARCHITECTURE.md) for complete details.
+
+## Development Approach
+
+This project uses **autonomous development** with Claude Code:
+- Claude handles all coding, testing, and verification
+- Comprehensive automated test suite (unit, integration, E2E)
+- User reviews only at milestones (Week 4, 8, 12)
+- See [Autonomous Development Guide](docs/AUTONOMOUS_DEVELOPMENT.md) for details
 
 ## Development Roadmap
 

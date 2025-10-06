@@ -588,27 +588,37 @@ All lists must have helpful empty states:
 
 ### 7.1 Technology Stack (MVP)
 
+**Framework:**
+- **Next.js 14+** with App Router (full-stack React framework)
+- TypeScript 5+ (strict mode)
+- Built-in API routes (no separate backend)
+
 **Frontend:**
-- React 18+
-- TypeScript (strict mode)
-- Vite (build tool)
+- React 18+ (built into Next.js)
 - Tailwind CSS + shadcn/ui components
 - Zustand (state management)
-- React Router v6 (routing)
 - React Hook Form + Zod (forms & validation)
 
+**Backend (API Routes):**
+- Next.js API routes (runs in Node.js)
+- better-sqlite3 (SQLite for Node.js)
+- Zod validation schemas
+
 **Database:**
-- sql.js (SQLite in browser)
-- IndexedDB (file storage)
+- better-sqlite3 (file-based SQLite database)
+- Location: `data/homemaint.db`
 
 **PWA:**
-- Vite PWA plugin
+- next-pwa plugin
 - Workbox (service worker)
 
 **Testing:**
-- Vitest (unit tests)
-- React Testing Library
-- Playwright (E2E tests)
+- Vitest (unit & integration tests)
+- React Testing Library (component tests)
+- Playwright (E2E tests, headless)
+
+**Why This Stack:**
+Enables fully autonomous development - all tests run in Node environment without browser interaction. Claude can verify everything works through automated testing.
 
 ### 7.2 Browser Support
 

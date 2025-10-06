@@ -87,89 +87,71 @@ The architecture supports multiple deployment models to accommodate different us
 
 ## 4. Technology Stack Recommendations
 
-### 4.1 Frontend
+### 4.1 Full-Stack Framework
 
-#### Primary Choice: React + TypeScript
+#### Primary Choice: Next.js 14+ with App Router
 **Rationale:**
-- Large ecosystem and community
-- Strong TypeScript support for type safety
-- Excellent PWA support
-- Component reusability
-- Rich UI library ecosystem
+- Full-stack React framework (frontend + backend in one)
+- Built-in API routes (no separate backend needed)
+- Server-side rendering + static generation
+- Excellent TypeScript support
+- File-based routing
+- **Critical for autonomous development**: Can test entire stack without browser
 
-**Key Libraries:**
-- **UI Framework**: React 18+
-- **Language**: TypeScript 5+
-- **State Management**: Zustand or Redux Toolkit
-- **Routing**: React Router v6
-- **UI Components**: shadcn/ui, Radix UI, or Material-UI
+**Key Features:**
+- **UI Framework**: React 18+ (built-in)
+- **Language**: TypeScript 5+ (strict mode)
+- **State Management**: Zustand
+- **Routing**: File-based (built-in)
+- **UI Components**: shadcn/ui (Tailwind + Radix UI)
 - **Forms**: React Hook Form + Zod validation
-- **Date Handling**: date-fns or Day.js
-- **File Upload**: react-dropzone
-- **Notifications**: react-toastify
-- **PWA**: Workbox
+- **Date Handling**: date-fns
+- **Notifications**: sonner
+- **PWA**: next-pwa plugin
 
-#### Alternative: Next.js
-**If SEO or SSR is needed:**
-- Next.js 14+ with App Router
-- Same benefits as React with added SSR/SSG
-- Better performance and SEO
-- Built-in routing and API routes
+### 4.2 Backend (Built into Next.js)
 
-### 4.2 Backend
-
-#### Option A: Node.js + Express (Recommended for Cloud)
+#### Next.js API Routes
 **Rationale:**
-- JavaScript/TypeScript across full stack
-- Fast development
-- Large ecosystem
-- Easy to deploy
+- No separate backend server needed
+- API routes run in Node.js environment
+- Same codebase as frontend
+- TypeScript across full stack
+- **Critical for autonomous development**: Can test API routes directly in Node
 
-**Key Libraries:**
-- **Framework**: Express.js or Fastify
+**Key Features:**
+- **Framework**: Next.js API Routes
 - **Language**: TypeScript
-- **Validation**: Zod
-- **Authentication**: Passport.js or NextAuth
-- **File Upload**: Multer
-- **ORM**: Prisma or Drizzle ORM
-- **Testing**: Jest, Vitest
+- **Validation**: Zod schemas
+- **Database Access**: Direct repository layer
+- **Testing**: Vitest (runs in Node, can test actual API calls)
 
-#### Option B: Python + FastAPI (Alternative)
-**Rationale:**
-- Excellent for data processing
-- Strong typing with Pydantic
-- Auto-generated API docs
-- Good performance
-
-**Key Libraries:**
-- **Framework**: FastAPI
-- **ORM**: SQLAlchemy or Tortoise ORM
-- **Validation**: Pydantic
-- **Authentication**: FastAPI Users
-- **Testing**: Pytest
-
-#### Option C: Local-First (Recommended for MVP)
-**No traditional backend needed:**
-- Frontend handles all logic
-- SQLite in browser (sql.js) or local storage
-- File system access via File System Access API
-- Optional sync service later
+**Example API Route:**
+```typescript
+// app/api/assets/route.ts
+export async function GET() {
+  const assets = await assetRepository.findAll();
+  return Response.json(assets);
+}
+```
 
 ### 4.3 Database
 
-#### Option A: SQLite (Recommended for MVP/Self-Hosted)
+#### Primary Choice: better-sqlite3 (SQLite for Node.js)
 **Rationale:**
 - Zero configuration
-- Local-first
-- Fast reads and writes
+- Local-first (single file database)
+- Fast synchronous operations
 - Perfect for single-user applications
 - Easy backups (single file)
 - No hosting costs
+- **Critical for autonomous development**: Can run actual database operations in tests
 
 **Implementation:**
-- Web: sql.js or Absurd-sql
-- Mobile: SQLite native
-- Desktop: better-sqlite3
+- Server-side (API routes): better-sqlite3
+- File location: `data/homemaint.db`
+- Migrations: Custom migration system
+- Access: Through repository layer only
 
 #### Option B: PostgreSQL (Recommended for Cloud)
 **Rationale:**
