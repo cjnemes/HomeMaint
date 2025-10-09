@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Package, Search, Filter } from 'lucide-react';
 import { AddAssetDialog } from '@/components/assets/add-asset-dialog';
 import { Input } from '@/components/ui/input';
@@ -157,36 +158,40 @@ export default function AssetsPage() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {assets.map((asset) => (
-                  <Card key={asset.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-lg">{asset.name}</CardTitle>
-                        <Badge variant={getStatusColor(asset.status)}>{asset.status}</Badge>
-                      </div>
-                      {asset.manufacturer && (
-                        <CardDescription>
-                          {asset.manufacturer}
-                          {asset.model_number && ` • ${asset.model_number}`}
-                        </CardDescription>
-                      )}
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm text-muted-foreground">
-                        {asset.location_id && (
-                          <div>Location: {getLocationName(asset.location_id)}</div>
+                  <Link key={asset.id} href={`/assets/${asset.id}`}>
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="text-lg">{asset.name}</CardTitle>
+                          <Badge variant={getStatusColor(asset.status)}>{asset.status}</Badge>
+                        </div>
+                        {asset.manufacturer && (
+                          <CardDescription>
+                            {asset.manufacturer}
+                            {asset.model_number && ` • ${asset.model_number}`}
+                          </CardDescription>
                         )}
-                        {asset.purchase_date && (
-                          <div>Purchased: {new Date(asset.purchase_date).toLocaleDateString()}</div>
-                        )}
-                        {asset.warranty_expiration_date && (
-                          <div>
-                            Warranty expires:{' '}
-                            {new Date(asset.warranty_expiration_date).toLocaleDateString()}
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2 text-sm text-muted-foreground">
+                          {asset.location_id && (
+                            <div>Location: {getLocationName(asset.location_id)}</div>
+                          )}
+                          {asset.purchase_date && (
+                            <div>
+                              Purchased: {new Date(asset.purchase_date).toLocaleDateString()}
+                            </div>
+                          )}
+                          {asset.warranty_expiration_date && (
+                            <div>
+                              Warranty expires:{' '}
+                              {new Date(asset.warranty_expiration_date).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </div>
