@@ -22,6 +22,9 @@ export class DatabaseService {
 
     // Run migrations
     this.runMigrations();
+
+    // Seed database with initial data if needed
+    this.seedIfNeeded();
   }
 
   public static getInstance(): DatabaseService {
@@ -328,6 +331,25 @@ export class DatabaseService {
         },
       },
     ];
+  }
+
+  private seedIfNeeded(): void {
+    // Check if database needs seeding (no homes exist)
+    try {
+      const result = this.db.prepare('SELECT COUNT(*) as count FROM homes').get() as {
+        count: number;
+      };
+
+      if (result.count === 0) {
+        console.log('Database is empty, running seed...');
+        // Import and run seed - must be done dynamically to avoid circular dependency
+        import('./seed').then(({ seedDatabase }) => {
+          seedDatabase();
+        });
+      }
+    } catch (error) {
+      console.error('Error checking database seed status:', error);
+    }
   }
 
   public close(): void {

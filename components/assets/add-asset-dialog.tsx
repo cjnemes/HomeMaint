@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Plus } from 'lucide-react';
+import { createAsset } from '@/app/actions/assets';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -33,14 +35,17 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { createAssetSchema } from '@/lib/validation/schemas';
-import { mockCategories, mockLocations } from '@/lib/mock-data';
+import type { Category, Location } from '@/lib/db/types';
 
 interface AddAssetDialogProps {
-  onAdd?: (asset: any) => void;
+  categories?: Category[];
+  locations?: Location[];
 }
 
-export function AddAssetDialog({ onAdd }: AddAssetDialogProps) {
+export function AddAssetDialog({ categories = [], locations = [] }: AddAssetDialogProps) {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(createAssetSchema),
@@ -62,10 +67,17 @@ export function AddAssetDialog({ onAdd }: AddAssetDialogProps) {
   });
 
   function onSubmit(values: any) {
-    console.log('Asset to add:', values);
-    onAdd?.(values);
-    form.reset();
-    setOpen(false);
+    startTransition(async () => {
+      try {
+        await createAsset(values);
+        form.reset();
+        setOpen(false);
+        router.refresh();
+      } catch (error) {
+        console.error('Failed to create asset:', error);
+        // TODO: Show error toast
+      }
+    });
   }
 
   return (
@@ -120,7 +132,7 @@ export function AddAssetDialog({ onAdd }: AddAssetDialogProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {mockCategories.map((category) => (
+                          {categories.map((category) => (
                             <SelectItem key={category.id} value={category.id.toString()}>
                               {category.icon} {category.name}
                             </SelectItem>
@@ -148,7 +160,7 @@ export function AddAssetDialog({ onAdd }: AddAssetDialogProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {mockLocations.map((location) => (
+                          {locations.map((location) => (
                             <SelectItem key={location.id} value={location.id.toString()}>
                               {location.name}
                             </SelectItem>
@@ -318,7 +330,9 @@ export function AddAssetDialog({ onAdd }: AddAssetDialogProps) {
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Add Asset</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Adding...' : 'Add Asset'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
