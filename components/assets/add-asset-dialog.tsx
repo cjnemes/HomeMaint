@@ -40,9 +40,10 @@ import type { Category, Location } from '@/lib/db/types';
 interface AddAssetDialogProps {
   categories?: Category[];
   locations?: Location[];
+  homeId: number;
 }
 
-export function AddAssetDialog({ categories = [], locations = [] }: AddAssetDialogProps) {
+export function AddAssetDialog({ categories = [], locations = [], homeId }: AddAssetDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -50,7 +51,7 @@ export function AddAssetDialog({ categories = [], locations = [] }: AddAssetDial
   const form = useForm({
     resolver: zodResolver(createAssetSchema),
     defaultValues: {
-      home_id: 1, // Default home
+      home_id: homeId,
       name: '',
       manufacturer: '',
       model_number: '',

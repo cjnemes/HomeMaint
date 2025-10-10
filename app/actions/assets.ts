@@ -1,8 +1,29 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { assetRepository, categoryRepository, locationRepository } from '@/lib/db/repositories';
-import type { Asset, CreateAsset } from '@/lib/db/types';
+import {
+  assetRepository,
+  categoryRepository,
+  locationRepository,
+  homeRepository,
+} from '@/lib/db/repositories';
+import type { Asset, CreateAsset, Home } from '@/lib/db/types';
+
+/**
+ * Get the first home (MVP supports single home)
+ */
+export async function getFirstHome(): Promise<Home> {
+  try {
+    const homes = homeRepository.findAll();
+    if (homes.length === 0) {
+      throw new Error('No home found. Please run database seed.');
+    }
+    return homes[0]!;
+  } catch (error) {
+    console.error('Failed to get home:', error);
+    throw new Error('Failed to fetch home');
+  }
+}
 
 /**
  * Get all assets for a home

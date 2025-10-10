@@ -20,9 +20,10 @@ interface AssetsClientProps {
   assets: Asset[];
   categories: Category[];
   locations: Location[];
+  homeId: number;
 }
 
-export function AssetsClient({ assets, categories, locations }: AssetsClientProps) {
+export function AssetsClient({ assets, categories, locations, homeId }: AssetsClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -99,7 +100,7 @@ export function AssetsClient({ assets, categories, locations }: AssetsClientProp
             {filteredAssets.length}
           </Badge>
         </div>
-        <AddAssetDialog categories={categories} locations={locations} />
+        <AddAssetDialog categories={categories} locations={locations} homeId={homeId} />
       </div>
 
       {/* Search and Filters */}
@@ -151,7 +152,7 @@ export function AssetsClient({ assets, categories, locations }: AssetsClientProp
               ? 'Try adjusting your search or filters'
               : 'Get started by adding your first home asset'}
           </p>
-          <AddAssetDialog categories={categories} locations={locations} />
+          <AddAssetDialog categories={categories} locations={locations} homeId={homeId} />
         </div>
       ) : (
         <div className="space-y-8">
