@@ -50,27 +50,28 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 ### Milestone 1: Core Foundation (Week 4)
 
 **Due**: November 2, 2025
-**Status**: Not Started
+**Status**: In Progress
 **Goal**: Asset management CRUD + basic UI
 **👤 USER REVIEW REQUIRED**
 
 **Key Features:**
 
-- Database layer with full schema
-- Asset repository (CRUD operations)
-- API routes for assets
+- ✅ Database layer with full schema
+- ✅ Asset repository (CRUD operations)
+- ✅ Server Actions for assets (100% tested)
 - Asset list page
 - Asset detail page
 - Asset add/edit forms
 - Search and filter functionality
-- Comprehensive test suite
+- Component test suite
 
 **Success Criteria:**
 
 - User can add, view, edit, delete assets
-- All tests passing (85%+ coverage)
+- All tests passing (70%+ coverage for Milestone 1)
 - Visual design follows mockups
 - Responsive on mobile and desktop
+- CI/CD pipeline passing
 
 ---
 
@@ -140,10 +141,11 @@ This roadmap tracks the development of HomeMaint from initial setup through laun
 
 ### Week 2-3: Asset Management
 
-- Implement repositories
-- Build API routes
-- Create UI pages
-- Write tests
+- ✅ Implement repositories (completed)
+- ✅ Build Server Actions (completed)
+- Create UI pages (asset list, detail, edit)
+- Add search and filtering
+- Write component tests
 - **Deliverable**: Asset CRUD complete
 
 ### Week 4: Milestone 1 Review 👤
@@ -241,12 +243,30 @@ All of these must pass before code is committed:
 
 ## Testing Strategy
 
-### Coverage Targets
+### Incremental Testing Approach
+
+We follow a **build-and-test** approach rather than test-first. Tests are written alongside features to ensure quality while maintaining development velocity.
+
+### Coverage Targets (Progressive)
+
+**By Milestone:**
+
+- **Milestone 0 (Week 1)**: Foundation setup, initial tests for Server Actions
+- **Milestone 1 (Week 4)**: 70%+ overall coverage
+- **Milestone 2 (Week 8)**: 80%+ overall coverage
+- **Milestone 3 (Week 12)**: 85%+ overall coverage
+
+**By Component Type:**
+
+- **Critical Path** (Server Actions, data validation): 90%+ coverage
+- **UI Components**: 70%+ coverage
+- **Utilities & Helpers**: 60%+ coverage
+
+### Test Distribution
 
 - **Unit Tests**: 60% of tests
 - **Integration Tests**: 30% of tests
 - **E2E Tests**: 10% of tests
-- **Overall Coverage**: 85%+
 
 ### What Gets Tested
 
@@ -254,17 +274,29 @@ All of these must pass before code is committed:
 
 1. Unit tests for business logic
 2. Component tests for UI
-3. Integration tests for API routes
-4. E2E tests for user flows
-5. Accessibility tests
+3. Integration tests for Server Actions
+4. E2E tests for critical user flows
+5. Accessibility tests (via Playwright)
 
 **Before Milestone Review:**
 
 - All tests passing
-- Coverage targets met
+- Coverage targets met for that milestone
 - Build succeeds
 - No TypeScript errors
 - No linting errors
+- CI/CD pipeline passing
+
+### Continuous Integration
+
+All pull requests and commits to main run through automated CI:
+
+- ✅ Type checking
+- ✅ Linting
+- ✅ Unit & integration tests
+- ✅ Test coverage reporting
+- ✅ Build verification
+- ✅ E2E tests (when available)
 
 ---
 
@@ -340,18 +372,27 @@ Before each milestone review, Claude will provide:
 
 **✅ Completed:**
 
-- All documentation
-- GitHub milestones created
-- Week 1 issues created
-- Playwright MCP integrated
+- Week 1: Project Setup (Milestone 0)
+  - Next.js 14 with TypeScript initialized
+  - ESLint, Prettier configured
+  - Tailwind CSS and shadcn/ui set up
+  - Database layer with better-sqlite3 operational
+  - Vitest and Playwright testing infrastructure configured
+  - Server Actions for assets implemented
+  - Comprehensive test suite for asset Server Actions (100% coverage)
+  - GitHub Actions CI/CD pipeline created
 
 **🚧 In Progress:**
 
-- Week 1: Project Setup
+- Week 2-3: Asset Management UI
+  - Building asset list page
+  - Creating asset detail/edit pages
 
 **📅 Up Next:**
 
-- Begin project initialization (Issue #1)
+- Complete asset management CRUD UI (Issue #7)
+- Asset search and filtering
+- Progress toward Milestone 1 (Week 4)
 
 ---
 

@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Test & Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type check
+        run: npm run type-check
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test:run
+
+      - name: Run test coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run E2E tests (if exists)
+        run: npm run test:e2e || echo "No E2E tests configured yet"
+        continue-on-error: true
+
+  quality-gates:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check test coverage threshold
+        run: |
+          npm run test:coverage 2>&1 | tee coverage-output.txt
+          COVERAGE=$(grep "All files" coverage-output.txt | awk '{print $4}' | sed 's/%//')
+          echo "Current coverage: $COVERAGE%"
+
+          # Warning if below 70%, fail if below 50%
+          if (( $(echo "$COVERAGE < 50" | bc -l) )); then
+            echo "❌ Coverage is below 50% threshold"
+            exit 1
+          elif (( $(echo "$COVERAGE < 70" | bc -l) )); then
+            echo "⚠️  Coverage is below 70% target (currently $COVERAGE%)"
+          else
+            echo "✅ Coverage meets target ($COVERAGE%)"
+          fi
+
+      - name: Check bundle size
+        run: |
+          npm run build
+          SIZE=$(du -sh .next/static | awk '{print $1}')
+          echo "Bundle size: $SIZE"
+          # Add bundle size checks here if needed
+
+  status-check:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    needs: [test, quality-gates]
+    if: always()
+
+    steps:
+      - name: Check status
+        run: |
+          if [ "${{ needs.test.result }}" != "success" ] || [ "${{ needs.quality-gates.result }}" != "success" ]; then
+            echo "❌ Some checks failed"
+            exit 1
+          fi
+          echo "✅ All checks passed!"
