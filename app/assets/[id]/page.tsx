@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Wrench, FileText } from 'lucide-react';
+import { ArrowLeft, Calendar, Wrench, FileText, DollarSign, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { EditAssetDialogWrapper } from '@/components/assets/edit-asset-dialog-wrapper';
@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { getAssetById, getCategories, getLocations } from '@/app/actions/assets';
+import { getMaintenanceRecords } from '@/app/actions/maintenance';
+import { AddMaintenanceRecordDialog } from '@/components/maintenance/add-maintenance-record-dialog';
 
 interface AssetDetailPageProps {
   params: Promise<{ id: string }>;
@@ -17,11 +19,16 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
   const assetId = parseInt(id);
 
   // Fetch data from database
-  const [asset, categories, locations] = await Promise.all([
+  const [asset, categories, locations, maintenanceRecords] = await Promise.all([
     getAssetById(assetId),
     getCategories(1),
     getLocations(1),
+    getMaintenanceRecords(assetId),
   ]);
+
+  // Calculate stats
+  const totalMaintenanceRecords = maintenanceRecords.length;
+  const totalSpent = maintenanceRecords.reduce((sum, record) => sum + (record.cost || 0), 0);
 
   if (!asset) {
     return (
@@ -205,18 +212,52 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
                   <Wrench className="h-5 w-5" />
                   Maintenance History
                 </CardTitle>
-                <Button variant="outline" size="sm">
-                  Add Record
-                </Button>
+                <AddMaintenanceRecordDialog assetId={assetId} />
               </div>
               <CardDescription>Track all service and repairs for this asset</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <Wrench className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No maintenance records yet</p>
-                <p className="text-sm mt-1">Log your first service to start tracking</p>
-              </div>
+              {maintenanceRecords.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Wrench className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No maintenance records yet</p>
+                  <p className="text-sm mt-1">Log your first service to start tracking</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {maintenanceRecords.map((record) => (
+                    <div
+                      key={record.id}
+                      className="flex items-start justify-between border-l-4 border-primary pl-4 py-2"
+                    >
+                      <div className="flex-1">
+                        <h4 className="font-semibold">{record.title}</h4>
+                        {record.description && (
+                          <p className="text-sm text-muted-foreground">{record.description}</p>
+                        )}
+                        <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(record.date_performed).toLocaleDateString()}
+                          </div>
+                          {record.performed_by && (
+                            <div className="flex items-center gap-1">
+                              <User className="h-3 w-3" />
+                              {record.performed_by}
+                            </div>
+                          )}
+                          {record.cost && (
+                            <div className="flex items-center gap-1">
+                              <DollarSign className="h-3 w-3" />${record.cost.toFixed(2)}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <Badge className="capitalize">{record.maintenance_type}</Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -230,7 +271,7 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{totalMaintenanceRecords}</p>
                 <p className="text-sm text-muted-foreground">Maintenance Records</p>
               </div>
               <Separator />
@@ -240,7 +281,7 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
               </div>
               <Separator />
               <div>
-                <p className="text-2xl font-bold">$0</p>
+                <p className="text-2xl font-bold">${totalSpent.toFixed(2)}</p>
                 <p className="text-sm text-muted-foreground">Total Spent</p>
               </div>
             </CardContent>
