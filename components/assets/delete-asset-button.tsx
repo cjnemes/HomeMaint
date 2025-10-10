@@ -1,7 +1,9 @@
 'use client';
 
+import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
+import { deleteAsset } from '@/app/actions/assets';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -21,11 +23,19 @@ interface DeleteAssetButtonProps {
 }
 
 export function DeleteAssetButton({ assetId, assetName }: DeleteAssetButtonProps) {
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const handleDelete = () => {
-    console.log('Deleting asset:', assetId);
-    router.push('/assets');
+    startTransition(async () => {
+      try {
+        await deleteAsset(assetId);
+        router.push('/assets');
+      } catch (error) {
+        console.error('Failed to delete asset:', error);
+        // TODO: Show error toast
+      }
+    });
   };
 
   return (
@@ -45,8 +55,10 @@ export function DeleteAssetButton({ assetId, assetName }: DeleteAssetButtonProps
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Delete Asset</AlertDialogAction>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
+            {isPending ? 'Deleting...' : 'Delete Asset'}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

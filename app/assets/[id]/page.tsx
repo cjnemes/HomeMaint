@@ -6,7 +6,7 @@ import { DeleteAssetButton } from '@/components/assets/delete-asset-button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { mockAssets, mockCategories, mockLocations } from '@/lib/mock-data';
+import { getAssetById, getCategories, getLocations } from '@/app/actions/assets';
 
 interface AssetDetailPageProps {
   params: Promise<{ id: string }>;
@@ -16,7 +16,12 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
   const { id } = await params;
   const assetId = parseInt(id);
 
-  const asset = mockAssets.find((a) => a.id === assetId);
+  // Fetch data from database
+  const [asset, categories, locations] = await Promise.all([
+    getAssetById(assetId),
+    getCategories(1),
+    getLocations(1),
+  ]);
 
   if (!asset) {
     return (
@@ -43,8 +48,8 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
     );
   }
 
-  const category = mockCategories.find((c) => c.id === asset.category_id);
-  const location = mockLocations.find((l) => l.id === asset.location_id);
+  const category = categories.find((c) => c.id === asset.category_id);
+  const location = locations.find((l) => l.id === asset.location_id);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -85,7 +90,7 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
           </div>
         </div>
         <div className="flex gap-2">
-          <EditAssetDialogWrapper asset={asset} />
+          <EditAssetDialogWrapper asset={asset} categories={categories} locations={locations} />
           <DeleteAssetButton assetId={asset.id} assetName={asset.name} />
         </div>
       </div>

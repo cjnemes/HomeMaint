@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Edit } from 'lucide-react';
+import { updateAsset } from '@/app/actions/assets';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -33,16 +35,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { updateAssetSchema } from '@/lib/validation/schemas';
-import { mockCategories, mockLocations } from '@/lib/mock-data';
-import type { Asset } from '@/lib/db/types';
+import type { Asset, Category, Location } from '@/lib/db/types';
 
 interface EditAssetDialogProps {
   asset: Asset;
-  onSave?: (asset: any) => void;
+  categories?: Category[];
+  locations?: Location[];
 }
 
-export function EditAssetDialog({ asset, onSave }: EditAssetDialogProps) {
+export function EditAssetDialog({ asset, categories = [], locations = [] }: EditAssetDialogProps) {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(updateAssetSchema),
@@ -81,9 +85,16 @@ export function EditAssetDialog({ asset, onSave }: EditAssetDialogProps) {
   }, [asset, form]);
 
   function onSubmit(values: any) {
-    console.log('Asset to update:', { id: asset.id, ...values });
-    onSave?.({ id: asset.id, ...values });
-    setOpen(false);
+    startTransition(async () => {
+      try {
+        await updateAsset(asset.id, values);
+        setOpen(false);
+        router.refresh();
+      } catch (error) {
+        console.error('Failed to update asset:', error);
+        // TODO: Show error toast
+      }
+    });
   }
 
   return (
@@ -136,7 +147,7 @@ export function EditAssetDialog({ asset, onSave }: EditAssetDialogProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {mockCategories.map((category) => (
+                          {categories.map((category) => (
                             <SelectItem key={category.id} value={category.id.toString()}>
                               {category.icon} {category.name}
                             </SelectItem>
@@ -164,7 +175,7 @@ export function EditAssetDialog({ asset, onSave }: EditAssetDialogProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {mockLocations.map((location) => (
+                          {locations.map((location) => (
                             <SelectItem key={location.id} value={location.id.toString()}>
                               {location.name}
                             </SelectItem>
@@ -358,7 +369,9 @@ export function EditAssetDialog({ asset, onSave }: EditAssetDialogProps) {
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Save Changes</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Saving...' : 'Save Changes'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
