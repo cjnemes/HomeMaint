@@ -29,6 +29,18 @@ export async function getMaintenanceRecordById(id: number): Promise<MaintenanceR
 }
 
 /**
+ * Get all maintenance records across all assets
+ */
+export async function getAllMaintenanceRecords(): Promise<MaintenanceRecord[]> {
+  try {
+    return maintenanceRecordRepository.findAll();
+  } catch (error) {
+    console.error('Failed to get all maintenance records:', error);
+    throw new Error('Failed to fetch all maintenance records');
+  }
+}
+
+/**
  * Get recent maintenance records (last N days)
  */
 export async function getRecentMaintenanceRecords(
