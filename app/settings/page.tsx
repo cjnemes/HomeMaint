@@ -1,5 +1,6 @@
 import { Settings } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { DataExport } from '@/components/settings/data-export';
 
 export default function SettingsPage() {
   return (
@@ -27,8 +28,8 @@ export default function SettingsPage() {
         <Separator />
 
         <div>
-          <h2 className="text-lg font-semibold mb-2">Data & Privacy</h2>
-          <p className="text-sm text-muted-foreground">Export your data or manage your account</p>
+          <h2 className="text-lg font-semibold mb-4">Data & Privacy</h2>
+          <DataExport />
         </div>
       </div>
     </div>
