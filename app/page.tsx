@@ -50,41 +50,48 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Welcome Header */}
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">
-          {hasData
-            ? "Welcome back! Here's an overview of your home maintenance."
-            : 'Welcome to HomeMaint! Get started by adding your first asset.'}
-        </p>
+      <div className="relative overflow-hidden rounded-xl gradient-subtle p-8 border border-border/50 animate-fade-in">
+        <div className="relative z-10">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-info bg-clip-text text-transparent">
+            Dashboard
+          </h1>
+          <p className="text-foreground/70 text-lg">
+            {hasData
+              ? "Welcome back! Here's an overview of your home maintenance."
+              : 'Welcome to HomeMaint! Get started by adding your first asset.'}
+          </p>
+        </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-slide-up">
         <SummaryCard
           title="Total Assets"
           value={totalAssets}
-          icon={<Package className="h-4 w-4 text-muted-foreground" />}
+          icon={<Package className="h-5 w-5" />}
           href="/assets"
+          variant="primary"
         />
         <SummaryCard
           title="Upcoming (30d)"
           value={upcomingCount}
-          icon={<Calendar className="h-4 w-4 text-muted-foreground" />}
+          icon={<Calendar className="h-5 w-5" />}
           href="/tasks"
+          variant="info"
         />
         <SummaryCard
           title="Overdue"
           value={overdueCount}
-          icon={<AlertTriangle className="h-4 w-4 text-destructive" />}
+          icon={<AlertTriangle className="h-5 w-5" />}
           href="/tasks"
           variant="danger"
         />
         <SummaryCard
           title="Completed"
           value={completedTasks}
-          icon={<CheckSquare className="h-4 w-4 text-muted-foreground" />}
+          icon={<CheckSquare className="h-5 w-5" />}
           href="/tasks"
+          variant="success"
         />
       </div>
 
@@ -92,11 +99,14 @@ export default async function DashboardPage() {
       {hasData ? (
         <div className="grid gap-6 md:grid-cols-2">
           {/* Upcoming Tasks Widget */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-lg font-semibold">Upcoming Tasks</CardTitle>
+          <Card className="card-elevated">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <CheckSquare className="h-5 w-5 text-primary" />
+                Upcoming Tasks
+              </CardTitle>
               <Link href="/tasks">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="hover:bg-primary/10">
                   View all
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -153,11 +163,14 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Recent Activity Widget */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
+          <Card className="card-elevated">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <Wrench className="h-5 w-5 text-success" />
+                Recent Activity
+              </CardTitle>
               <Link href="/maintenance">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="hover:bg-success/10">
                   View all
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -200,17 +213,19 @@ export default async function DashboardPage() {
         </div>
       ) : (
         /* Empty State */
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Package className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Get Started with HomeMaint</h3>
-            <p className="text-sm text-muted-foreground mb-6 text-center max-w-md">
+        <Card className="border-2 border-dashed border-border hover:border-primary/50 transition-colors">
+          <CardContent className="flex flex-col items-center justify-center py-16 px-8">
+            <div className="rounded-full bg-primary/10 p-6 mb-6">
+              <Package className="h-16 w-16 text-primary" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3">Get Started with HomeMaint</h3>
+            <p className="text-base text-muted-foreground mb-8 text-center max-w-lg leading-relaxed">
               Begin by adding your first asset. Track appliances, systems, and equipment to stay on
               top of your home maintenance.
             </p>
             <Link href="/assets">
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button size="lg" className="btn-gradient shadow-lg">
+                <Plus className="mr-2 h-5 w-5" />
                 Add Your First Asset
               </Button>
             </Link>
@@ -219,25 +234,30 @@ export default async function DashboardPage() {
       )}
 
       {/* Quick Actions */}
-      <div className="flex gap-4 flex-wrap">
-        <Link href="/assets">
-          <Button variant="outline">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Asset
-          </Button>
-        </Link>
-        <Link href="/maintenance">
-          <Button variant="outline">
-            <Wrench className="mr-2 h-4 w-4" />
-            Log Maintenance
-          </Button>
-        </Link>
-        <Link href="/tasks">
-          <Button variant="outline">
-            <CheckSquare className="mr-2 h-4 w-4" />
-            Create Task
-          </Button>
-        </Link>
+      <div className="bg-background-subtle rounded-xl p-6 border border-border/50">
+        <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+          Quick Actions
+        </h3>
+        <div className="flex gap-3 flex-wrap">
+          <Link href="/assets">
+            <Button variant="outline" size="lg" className="hover:border-primary hover:bg-primary/5">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Asset
+            </Button>
+          </Link>
+          <Link href="/maintenance">
+            <Button variant="outline" size="lg" className="hover:border-success hover:bg-success/5">
+              <Wrench className="mr-2 h-4 w-4" />
+              Log Maintenance
+            </Button>
+          </Link>
+          <Link href="/tasks">
+            <Button variant="outline" size="lg" className="hover:border-info hover:bg-info/5">
+              <CheckSquare className="mr-2 h-4 w-4" />
+              Create Task
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -248,27 +268,54 @@ function SummaryCard({
   value,
   icon,
   href,
-  variant,
+  variant = 'primary',
 }: {
   title: string;
   value: number;
   icon: React.ReactNode;
   href: string;
-  variant?: 'danger';
+  variant?: 'primary' | 'success' | 'danger' | 'info';
 }) {
+  const variantStyles = {
+    primary: {
+      border: 'border-l-primary',
+      icon: 'bg-primary/10 text-primary',
+      value: 'text-foreground',
+    },
+    success: {
+      border: 'border-l-success',
+      icon: 'bg-success/10 text-success',
+      value: 'text-foreground',
+    },
+    danger: {
+      border: 'border-l-destructive',
+      icon: 'bg-destructive/10 text-destructive',
+      value: value > 0 ? 'text-destructive' : 'text-foreground',
+    },
+    info: {
+      border: 'border-l-info',
+      icon: 'bg-info/10 text-info',
+      value: 'text-foreground',
+    },
+  };
+
+  const styles = variantStyles[variant];
+
   return (
     <Link href={href}>
-      <Card className="hover:bg-accent transition-colors cursor-pointer">
+      <Card
+        className={`card-hover cursor-pointer border-l-4 ${styles.border} overflow-hidden group`}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">{title}</CardTitle>
-          {icon}
+          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+          <div
+            className={`rounded-full p-2 ${styles.icon} transition-transform group-hover:scale-110`}
+          >
+            {icon}
+          </div>
         </CardHeader>
         <CardContent>
-          <div
-            className={`text-2xl font-bold ${variant === 'danger' && value > 0 ? 'text-destructive' : ''}`}
-          >
-            {value}
-          </div>
+          <div className={`text-3xl font-bold ${styles.value}`}>{value}</div>
         </CardContent>
       </Card>
     </Link>
