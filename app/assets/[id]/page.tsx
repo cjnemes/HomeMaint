@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Wrench, FileText, DollarSign, User, CheckSquare } from 'lucide-react';
+import { ArrowLeft, Calendar, Wrench, DollarSign, User, CheckSquare } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { EditAssetDialogWrapper } from '@/components/assets/edit-asset-dialog-wrapper';
@@ -9,8 +9,10 @@ import { Separator } from '@/components/ui/separator';
 import { getAssetById, getCategories, getLocations } from '@/app/actions/assets';
 import { getMaintenanceRecords } from '@/app/actions/maintenance';
 import { getTasks } from '@/app/actions/tasks';
+import { getAttachmentsByAssetId } from '@/app/actions/attachments';
 import { AddMaintenanceRecordDialog } from '@/components/maintenance/add-maintenance-record-dialog';
 import { AddTaskDialog } from '@/components/tasks/add-task-dialog';
+import { FilesSection } from '@/components/files/files-section';
 
 interface AssetDetailPageProps {
   params: Promise<{ id: string }>;
@@ -21,12 +23,13 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
   const assetId = parseInt(id);
 
   // Fetch data from database
-  const [asset, categories, locations, maintenanceRecords, tasks] = await Promise.all([
+  const [asset, categories, locations, maintenanceRecords, tasks, attachments] = await Promise.all([
     getAssetById(assetId),
     getCategories(1),
     getLocations(1),
     getMaintenanceRecords(assetId),
     getTasks(assetId),
+    getAttachmentsByAssetId(assetId),
   ]);
 
   // Calculate stats
@@ -364,21 +367,8 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
             </CardContent>
           </Card>
 
-          {/* Documents */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <FileText className="h-4 w-4" />
-                Documents
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-6 text-muted-foreground">
-                <FileText className="h-10 w-10 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">No documents uploaded</p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Files */}
+          <FilesSection entityType="asset" entityId={assetId} attachments={attachments} />
         </div>
       </div>
     </div>

@@ -11,6 +11,17 @@ export class MaintenanceRecordRepository extends BaseRepository<
   }
 
   /**
+   * Find all maintenance records
+   */
+  findAll(): MaintenanceRecord[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM maintenance_records
+      ORDER BY date_performed DESC
+    `);
+    return stmt.all() as MaintenanceRecord[];
+  }
+
+  /**
    * Find all maintenance records for an asset
    */
   findByAssetId(assetId: number): MaintenanceRecord[] {
