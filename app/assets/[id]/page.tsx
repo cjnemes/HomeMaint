@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Wrench, FileText, DollarSign, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Wrench, FileText, DollarSign, User, CheckSquare } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { EditAssetDialogWrapper } from '@/components/assets/edit-asset-dialog-wrapper';
@@ -8,7 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { getAssetById, getCategories, getLocations } from '@/app/actions/assets';
 import { getMaintenanceRecords } from '@/app/actions/maintenance';
+import { getTasks } from '@/app/actions/tasks';
 import { AddMaintenanceRecordDialog } from '@/components/maintenance/add-maintenance-record-dialog';
+import { AddTaskDialog } from '@/components/tasks/add-task-dialog';
 
 interface AssetDetailPageProps {
   params: Promise<{ id: string }>;
@@ -19,16 +21,26 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
   const assetId = parseInt(id);
 
   // Fetch data from database
-  const [asset, categories, locations, maintenanceRecords] = await Promise.all([
+  const [asset, categories, locations, maintenanceRecords, tasks] = await Promise.all([
     getAssetById(assetId),
     getCategories(1),
     getLocations(1),
     getMaintenanceRecords(assetId),
+    getTasks(assetId),
   ]);
 
   // Calculate stats
   const totalMaintenanceRecords = maintenanceRecords.length;
   const totalSpent = maintenanceRecords.reduce((sum, record) => sum + (record.cost || 0), 0);
+
+  // Calculate task stats
+  const pendingTasks = tasks.filter((t) => t.status === 'pending' || t.status === 'in_progress');
+  const upcomingTasks = pendingTasks
+    .filter((t) => t.due_date)
+    .sort((a, b) => {
+      if (!a.due_date || !b.due_date) return 0;
+      return new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
+    });
 
   if (!asset) {
     return (
@@ -276,8 +288,8 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
               </div>
               <Separator />
               <div>
-                <p className="text-2xl font-bold">0</p>
-                <p className="text-sm text-muted-foreground">Upcoming Tasks</p>
+                <p className="text-2xl font-bold">{pendingTasks.length}</p>
+                <p className="text-sm text-muted-foreground">Pending Tasks</p>
               </div>
               <Separator />
               <div>
@@ -290,16 +302,65 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
           {/* Upcoming Tasks */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Calendar className="h-4 w-4" />
-                Upcoming Tasks
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <CheckSquare className="h-4 w-4" />
+                  Upcoming Tasks
+                </CardTitle>
+                <AddTaskDialog assetId={assetId} />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-6 text-muted-foreground">
-                <Calendar className="h-10 w-10 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">No scheduled tasks</p>
-              </div>
+              {upcomingTasks.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground">
+                  <CheckSquare className="h-10 w-10 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">No scheduled tasks</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {upcomingTasks.slice(0, 3).map((task) => {
+                    const dueDate = task.due_date ? new Date(task.due_date) : null;
+                    const isOverdue = dueDate && dueDate < new Date();
+
+                    return (
+                      <div key={task.id} className="space-y-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="text-sm font-medium line-clamp-1">{task.title}</p>
+                          <Badge
+                            variant="outline"
+                            className={`text-xs flex-shrink-0 ${
+                              task.priority === 'critical'
+                                ? 'border-red-500 text-red-500'
+                                : task.priority === 'high'
+                                  ? 'border-orange-500 text-orange-500'
+                                  : ''
+                            }`}
+                          >
+                            {task.priority}
+                          </Badge>
+                        </div>
+                        {dueDate && (
+                          <div
+                            className={`flex items-center gap-1 text-xs ${
+                              isOverdue ? 'text-red-500 font-medium' : 'text-muted-foreground'
+                            }`}
+                          >
+                            <Calendar className="h-3 w-3" />
+                            {dueDate.toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {upcomingTasks.length > 3 && (
+                    <Link href="/tasks">
+                      <Button variant="ghost" size="sm" className="w-full mt-2">
+                        View All {upcomingTasks.length} Tasks
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
