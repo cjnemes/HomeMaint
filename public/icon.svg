@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="#000000"/>
+
+  <!-- House -->
+  <path d="M256 100L140 200V380H220V280H292V380H372V200L256 100Z" fill="#FFFFFF"/>
+  <path d="M256 80L100 220H140L256 120L372 220H412L256 80Z" fill="#FFFFFF"/>
+
+  <!-- Wrench/Tool Icon -->
+  <g transform="translate(320, 320)">
+    <circle cx="0" cy="0" r="60" fill="#FFA500"/>
+    <path d="M-25 -10L-10 -25L10 -5L25 -20L35 -10L15 10L20 15L30 25L20 35L10 25L5 30L-15 10L-5 0L-25 -10Z" fill="#FFFFFF"/>
+  </g>
+</svg>
