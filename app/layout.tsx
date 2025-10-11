@@ -3,6 +3,7 @@ import './globals.css';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { OfflineIndicator } from '@/components/ui/offline-indicator';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'HomeMaint - Home Maintenance Tracker',
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="min-h-screen flex flex-col">
         <OfflineIndicator />
+        <Toaster />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

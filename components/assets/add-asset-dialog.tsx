@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 import { createAsset } from '@/app/actions/assets';
 import { Button } from '@/components/ui/button';
 import {
@@ -71,12 +72,13 @@ export function AddAssetDialog({ categories = [], locations = [], homeId }: AddA
     startTransition(async () => {
       try {
         await createAsset(values);
+        toast.success('Asset created successfully');
         form.reset();
         setOpen(false);
         router.refresh();
       } catch (error) {
         console.error('Failed to create asset:', error);
-        // TODO: Show error toast
+        toast.error('Failed to create asset. Please try again.');
       }
     });
   }

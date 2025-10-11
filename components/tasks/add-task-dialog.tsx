@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 import { createTask } from '@/app/actions/tasks';
 import { Button } from '@/components/ui/button';
 import {
@@ -68,12 +69,13 @@ export function AddTaskDialog({ assetId, trigger }: AddTaskDialogProps) {
     startTransition(async () => {
       try {
         await createTask(values);
+        toast.success('Task created successfully');
         form.reset();
         setOpen(false);
         router.refresh();
       } catch (error) {
         console.error('Failed to create task:', error);
-        // TODO: Show error toast
+        toast.error('Failed to create task. Please try again.');
       }
     });
   }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Edit } from 'lucide-react';
+import { toast } from 'sonner';
 import { updateTask } from '@/app/actions/tasks';
 import { Button } from '@/components/ui/button';
 import {
@@ -83,11 +84,12 @@ export function EditTaskDialog({ task }: EditTaskDialogProps) {
     startTransition(async () => {
       try {
         await updateTask(task.id, values);
+        toast.success('Task updated successfully');
         setOpen(false);
         router.refresh();
       } catch (error) {
         console.error('Failed to update task:', error);
-        // TODO: Show error toast
+        toast.error('Failed to update task. Please try again.');
       }
     });
   }

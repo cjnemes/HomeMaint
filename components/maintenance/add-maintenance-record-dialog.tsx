@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 import { createMaintenanceRecord } from '@/app/actions/maintenance';
 import { Button } from '@/components/ui/button';
 import {
@@ -68,12 +69,13 @@ export function AddMaintenanceRecordDialog({ assetId, trigger }: AddMaintenanceR
     startTransition(async () => {
       try {
         await createMaintenanceRecord(values);
+        toast.success('Maintenance record created successfully');
         form.reset();
         setOpen(false);
         router.refresh();
       } catch (error) {
         console.error('Failed to create maintenance record:', error);
-        // TODO: Show error toast
+        toast.error('Failed to create maintenance record. Please try again.');
       }
     });
   }

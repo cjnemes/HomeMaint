@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { deleteAsset } from '@/app/actions/assets';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,10 +31,11 @@ export function DeleteAssetButton({ assetId, assetName }: DeleteAssetButtonProps
     startTransition(async () => {
       try {
         await deleteAsset(assetId);
+        toast.success('Asset deleted successfully');
         router.push('/assets');
       } catch (error) {
         console.error('Failed to delete asset:', error);
-        // TODO: Show error toast
+        toast.error('Failed to delete asset. Please try again.');
       }
     });
   };

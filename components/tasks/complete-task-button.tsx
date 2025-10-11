@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { completeTask } from '@/app/actions/tasks';
 import { Button } from '@/components/ui/button';
 
@@ -28,10 +29,11 @@ export function CompleteTaskButton({
     startTransition(async () => {
       try {
         await completeTask(taskId);
+        toast.success('Task completed successfully');
         router.refresh();
       } catch (error) {
         console.error('Failed to complete task:', error);
-        // TODO: Show error toast
+        toast.error('Failed to complete task. Please try again.');
       }
     });
   };

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Edit } from 'lucide-react';
+import { toast } from 'sonner';
 import { updateAsset } from '@/app/actions/assets';
 import { Button } from '@/components/ui/button';
 import {
@@ -88,11 +89,12 @@ export function EditAssetDialog({ asset, categories = [], locations = [] }: Edit
     startTransition(async () => {
       try {
         await updateAsset(asset.id, values);
+        toast.success('Asset updated successfully');
         setOpen(false);
         router.refresh();
       } catch (error) {
         console.error('Failed to update asset:', error);
-        // TODO: Show error toast
+        toast.error('Failed to update asset. Please try again.');
       }
     });
   }
