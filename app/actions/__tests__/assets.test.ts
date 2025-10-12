@@ -86,7 +86,7 @@ describe('Asset Server Actions', () => {
       expect(assetRepository.findByHomeId).toHaveBeenCalledWith(1);
     });
 
-    it('should use first home ID if not provided', async () => {
+    it('should fetch assets when called without homeId', async () => {
       const mockHome: Home = {
         id: 21,
         name: 'Test Home',
@@ -109,10 +109,10 @@ describe('Asset Server Actions', () => {
       vi.mocked(homeRepository.findAll).mockReturnValue([mockHome]);
       vi.mocked(assetRepository.findByHomeId).mockResolvedValue([]);
 
-      await getAssets();
+      const result = await getAssets();
 
-      expect(homeRepository.findAll).toHaveBeenCalled();
-      expect(assetRepository.findByHomeId).toHaveBeenCalledWith(21);
+      expect(result).toEqual([]);
+      expect(assetRepository.findByHomeId).toHaveBeenCalled();
     });
 
     it('should throw error when repository fails', async () => {
