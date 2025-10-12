@@ -48,15 +48,15 @@ export function AssetsClient({ assets, categories, locations, homeId }: AssetsCl
 
   // Group assets by category
   const assetsByCategory = useMemo(() => {
-    const grouped: Record<number, Asset[]> = {};
+    const grouped: Record<number | string, Asset[]> = {};
     filteredAssets.forEach((asset) => {
-      // Skip assets without a category
-      if (!asset.category_id) return;
+      // Put uncategorized assets in a special "uncategorized" group
+      const key = asset.category_id || 'uncategorized';
 
-      if (!grouped[asset.category_id]) {
-        grouped[asset.category_id] = [];
+      if (!grouped[key]) {
+        grouped[key] = [];
       }
-      grouped[asset.category_id]!.push(asset);
+      grouped[key]!.push(asset);
     });
     return grouped;
   }, [filteredAssets]);
@@ -176,66 +176,74 @@ export function AssetsClient({ assets, categories, locations, homeId }: AssetsCl
         </Card>
       ) : (
         <div className="space-y-8">
-          {Object.entries(assetsByCategory).map(([categoryId, assets]) => (
-            <div key={categoryId} className="animate-fade-in">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex items-center gap-2 px-4 py-2 bg-background-subtle rounded-lg border border-border/50">
-                  <span className="text-2xl">{getCategoryIcon(parseInt(categoryId))}</span>
-                  <h2 className="text-xl font-semibold">{getCategoryName(parseInt(categoryId))}</h2>
+          {Object.entries(assetsByCategory).map(([categoryId, assets]) => {
+            const isUncategorized = categoryId === 'uncategorized';
+            const categoryIcon = isUncategorized ? '📦' : getCategoryIcon(parseInt(categoryId));
+            const categoryName = isUncategorized
+              ? 'Uncategorized'
+              : getCategoryName(parseInt(categoryId));
+
+            return (
+              <div key={categoryId} className="animate-fade-in">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-background-subtle rounded-lg border border-border/50">
+                    <span className="text-2xl">{categoryIcon}</span>
+                    <h2 className="text-xl font-semibold">{categoryName}</h2>
+                  </div>
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+                    {assets.length}
+                  </Badge>
                 </div>
-                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                  {assets.length}
-                </Badge>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {assets.map((asset) => (
+                    <Link key={asset.id} href={`/assets/${asset.id}`}>
+                      <Card className="card-hover cursor-pointer h-full group">
+                        <CardHeader>
+                          <div className="flex justify-between items-start gap-2">
+                            <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                              {asset.name}
+                            </CardTitle>
+                            <Badge variant={getStatusColor(asset.status)} className="shrink-0">
+                              {asset.status}
+                            </Badge>
+                          </div>
+                          {asset.manufacturer && (
+                            <CardDescription className="font-medium">
+                              {asset.manufacturer}
+                              {asset.model_number && ` • ${asset.model_number}`}
+                            </CardDescription>
+                          )}
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm text-muted-foreground">
+                            {asset.location_id && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-primary">📍</span>
+                                {getLocationName(asset.location_id)}
+                              </div>
+                            )}
+                            {asset.purchase_date && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-primary">📅</span>
+                                Purchased: {new Date(asset.purchase_date).toLocaleDateString()}
+                              </div>
+                            )}
+                            {asset.warranty_expiration_date && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-primary">🛡️</span>
+                                Warranty:{' '}
+                                {new Date(asset.warranty_expiration_date).toLocaleDateString()}
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {assets.map((asset) => (
-                  <Link key={asset.id} href={`/assets/${asset.id}`}>
-                    <Card className="card-hover cursor-pointer h-full group">
-                      <CardHeader>
-                        <div className="flex justify-between items-start gap-2">
-                          <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                            {asset.name}
-                          </CardTitle>
-                          <Badge variant={getStatusColor(asset.status)} className="shrink-0">
-                            {asset.status}
-                          </Badge>
-                        </div>
-                        {asset.manufacturer && (
-                          <CardDescription className="font-medium">
-                            {asset.manufacturer}
-                            {asset.model_number && ` • ${asset.model_number}`}
-                          </CardDescription>
-                        )}
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2 text-sm text-muted-foreground">
-                          {asset.location_id && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-primary">📍</span>
-                              {getLocationName(asset.location_id)}
-                            </div>
-                          )}
-                          {asset.purchase_date && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-primary">📅</span>
-                              Purchased: {new Date(asset.purchase_date).toLocaleDateString()}
-                            </div>
-                          )}
-                          {asset.warranty_expiration_date && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-primary">🛡️</span>
-                              Warranty:{' '}
-                              {new Date(asset.warranty_expiration_date).toLocaleDateString()}
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
