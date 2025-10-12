@@ -8,7 +8,7 @@ import { LayoutDashboard, Package, Wrench, CheckSquare, Users, Settings } from '
 const navItems = [
   {
     title: 'Dashboard',
-    href: '/dashboard',
+    href: '/',
     icon: LayoutDashboard,
   },
   {

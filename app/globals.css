@@ -28,7 +28,7 @@ a {
 }
 
 :root {
-  --background: 0 0% 100%;
+  --background: 210 30% 98%;
   --foreground: 222 47% 11%;
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
@@ -61,15 +61,15 @@ a {
   --info-light: 262 83% 95%;
 
   /* Background variations */
-  --background-subtle: 210 40% 98%;
-  --background-muted: 210 40% 96%;
+  --background-subtle: 210 40% 96%;
+  --background-muted: 210 40% 94%;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Shadows - Enhanced for more depth */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.12), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.12), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.12), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.14), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .dark {
@@ -105,11 +105,21 @@ a {
 @layer components {
   /* Card enhancements */
   .card-elevated {
-    @apply shadow-md hover:shadow-lg transition-shadow duration-200;
+    @apply shadow-lg hover:shadow-xl transition-all duration-200;
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
+    @apply shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  /* Background pattern for sections */
+  .bg-pattern {
+    background-image: radial-gradient(
+      circle at 20px 20px,
+      hsl(var(--primary) / 0.03) 1px,
+      transparent 1px
+    );
+    background-size: 40px 40px;
   }
 
   /* Button enhancements */
