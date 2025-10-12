@@ -99,6 +99,10 @@ export async function uploadAttachment(
         .replace(/[\/\\]/g, '_') // Replace path separators
         .replace(/[\x00-\x1f\x7f]/g, '') // Remove control characters
         .replace(/[<>:"|?*]/g, '_') // Replace filesystem-dangerous characters
+        .replace(/\s+/g, ' ') // Collapse multiple spaces to single space
+        .replace(/\.{2,}/g, '.') // Collapse consecutive dots to single dot
+        .replace(/_{2,}/g, '_') // Collapse consecutive underscores to single underscore
+        .replace(/^\.+|\.+$/g, '') // Remove leading/trailing dots
         .substring(0, 255) // Limit length
         .trim();
     };
