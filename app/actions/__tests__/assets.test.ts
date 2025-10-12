@@ -8,8 +8,13 @@ import {
   getCategories,
   getLocations,
 } from '../assets';
-import { assetRepository, categoryRepository, locationRepository } from '@/lib/db/repositories';
-import type { Asset, CreateAsset } from '@/lib/db/types';
+import {
+  assetRepository,
+  categoryRepository,
+  locationRepository,
+  homeRepository,
+} from '@/lib/db/repositories';
+import type { Asset, CreateAsset, Home } from '@/lib/db/types';
 
 // Mock Next.js cache revalidation
 vi.mock('next/cache', () => ({
@@ -30,6 +35,9 @@ vi.mock('@/lib/db/repositories', () => ({
   },
   locationRepository: {
     findByHomeId: vi.fn(),
+  },
+  homeRepository: {
+    findAll: vi.fn(),
   },
 }));
 
@@ -78,12 +86,33 @@ describe('Asset Server Actions', () => {
       expect(assetRepository.findByHomeId).toHaveBeenCalledWith(1);
     });
 
-    it('should use default homeId of 1 if not provided', async () => {
+    it('should use first home ID if not provided', async () => {
+      const mockHome: Home = {
+        id: 21,
+        name: 'Test Home',
+        address_line1: null,
+        address_line2: null,
+        city: null,
+        state: null,
+        postal_code: null,
+        country: null,
+        year_built: null,
+        square_footage: null,
+        lot_size: null,
+        purchase_date: null,
+        purchase_price: null,
+        notes: null,
+        created_at: '2025-10-10T00:00:00.000Z',
+        updated_at: '2025-10-10T00:00:00.000Z',
+      };
+
+      vi.mocked(homeRepository.findAll).mockReturnValue([mockHome]);
       vi.mocked(assetRepository.findByHomeId).mockResolvedValue([]);
 
       await getAssets();
 
-      expect(assetRepository.findByHomeId).toHaveBeenCalledWith(1);
+      expect(homeRepository.findAll).toHaveBeenCalled();
+      expect(assetRepository.findByHomeId).toHaveBeenCalledWith(21);
     });
 
     it('should throw error when repository fails', async () => {

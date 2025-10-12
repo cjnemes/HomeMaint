@@ -343,9 +343,13 @@ export class DatabaseService {
       if (result.count === 0) {
         console.log('Database is empty, running seed...');
         // Import and run seed - must be done dynamically to avoid circular dependency
-        import('./seed').then(({ seedDatabase }) => {
-          seedDatabase();
-        });
+        import('./seed')
+          .then(({ seedDatabase }) => {
+            seedDatabase();
+          })
+          .catch((error) => {
+            console.error('Error during database seeding:', error);
+          });
       }
     } catch (error) {
       console.error('Error checking database seed status:', error);

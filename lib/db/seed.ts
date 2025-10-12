@@ -6,10 +6,16 @@ import { homeRepository, categoryRepository, locationRepository } from './reposi
  * This runs automatically when the database is first created
  */
 export function seedDatabase() {
-  // Check if we already have a home
-  const existingHomes = homeRepository.findAll();
-  if (existingHomes.length > 0) {
-    console.log('Database already seeded');
+  try {
+    // Check if we already have a home
+    const existingHomes = homeRepository.findAll();
+    if (existingHomes.length > 0) {
+      console.log('Database already seeded');
+      return;
+    }
+  } catch {
+    // If repositories aren't initialized yet (e.g., during tests), skip seeding
+    console.log('Skipping seed check - repositories not ready');
     return;
   }
 
