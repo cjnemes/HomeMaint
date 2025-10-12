@@ -43,7 +43,7 @@ const FILE_CATEGORIES = [
 export function FileUpload({
   entityType,
   entityId,
-  homeId = 1,
+  homeId,
   onUploadComplete,
   onUploadError,
 }: FileUploadProps) {

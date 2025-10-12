@@ -9,6 +9,13 @@ export abstract class BaseRepository<T, CreateT, UpdateT> {
   protected tableName: string;
 
   constructor(tableName: string) {
+    // Validate table name to prevent SQL injection
+    // Table names must only contain lowercase letters, numbers, and underscores
+    if (!/^[a-z_][a-z0-9_]*$/.test(tableName)) {
+      throw new Error(
+        `Invalid table name: "${tableName}". Table names must only contain lowercase letters, numbers, and underscores, and must start with a letter or underscore.`
+      );
+    }
     this.db = db.getDatabase();
     this.tableName = tableName;
   }

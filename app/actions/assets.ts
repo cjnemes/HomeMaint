@@ -11,26 +11,38 @@ import type { Asset, CreateAsset, Home } from '@/lib/db/types';
 
 /**
  * Get the first home (MVP supports single home)
+ * Auto-reseeds database if no homes exist (recovery mechanism)
  */
 export async function getFirstHome(): Promise<Home> {
   try {
     const homes = homeRepository.findAll();
+
+    // Auto-recovery: if no homes exist, reseed the database
     if (homes.length === 0) {
-      throw new Error('No home found. Please run database seed.');
+      console.warn('No homes found - auto-reseeding database');
+      const { seedDatabase } = await import('@/lib/db/seed');
+      const seededData = seedDatabase();
+      if (!seededData || !seededData.home) {
+        throw new Error('Failed to auto-reseed database');
+      }
+      return seededData.home;
     }
+
     return homes[0]!;
   } catch (error) {
     console.error('Failed to get home:', error);
-    throw new Error('Failed to fetch home');
+    throw new Error('Failed to fetch home. Database may be corrupted.');
   }
 }
 
 /**
  * Get all assets for a home
  */
-export async function getAssets(homeId: number = 1): Promise<Asset[]> {
+export async function getAssets(homeId?: number): Promise<Asset[]> {
   try {
-    return assetRepository.findByHomeId(homeId);
+    // If no homeId provided, use the first home (MVP supports single home)
+    const actualHomeId = homeId ?? (await getFirstHome()).id;
+    return assetRepository.findByHomeId(actualHomeId);
   } catch (error) {
     console.error('Failed to get assets:', error);
     throw new Error('Failed to fetch assets');
@@ -52,12 +64,14 @@ export async function getAssetById(id: number): Promise<Asset | undefined> {
 /**
  * Search assets by query
  */
-export async function searchAssets(query: string, homeId: number = 1): Promise<Asset[]> {
+export async function searchAssets(query: string, homeId?: number): Promise<Asset[]> {
   try {
+    // If no homeId provided, use the first home (MVP supports single home)
+    const actualHomeId = homeId ?? (await getFirstHome()).id;
     if (!query.trim()) {
-      return assetRepository.findByHomeId(homeId);
+      return assetRepository.findByHomeId(actualHomeId);
     }
-    return assetRepository.search(homeId, query);
+    return assetRepository.search(actualHomeId, query);
   } catch (error) {
     console.error('Failed to search assets:', error);
     throw new Error('Failed to search assets');
@@ -91,9 +105,11 @@ export async function getAssetsByLocation(locationId: number): Promise<Asset[]> 
 /**
  * Get assets by status
  */
-export async function getAssetsByStatus(status: string, homeId: number = 1): Promise<Asset[]> {
+export async function getAssetsByStatus(status: string, homeId?: number): Promise<Asset[]> {
   try {
-    return assetRepository.findByStatus(homeId, status);
+    // If no homeId provided, use the first home (MVP supports single home)
+    const actualHomeId = homeId ?? (await getFirstHome()).id;
+    return assetRepository.findByStatus(actualHomeId, status);
   } catch (error) {
     console.error(`Failed to get assets with status ${status}:`, error);
     throw new Error('Failed to fetch assets');
@@ -176,9 +192,11 @@ export async function deleteAsset(id: number): Promise<boolean> {
 /**
  * Get categories for asset forms
  */
-export async function getCategories(homeId: number = 1) {
+export async function getCategories(homeId?: number) {
   try {
-    return categoryRepository.findByHomeId(homeId);
+    // If no homeId provided, use the first home (MVP supports single home)
+    const actualHomeId = homeId ?? (await getFirstHome()).id;
+    return categoryRepository.findByHomeId(actualHomeId);
   } catch (error) {
     console.error('Failed to get categories:', error);
     throw new Error('Failed to fetch categories');
@@ -188,9 +206,11 @@ export async function getCategories(homeId: number = 1) {
 /**
  * Get locations for asset forms
  */
-export async function getLocations(homeId: number = 1) {
+export async function getLocations(homeId?: number) {
   try {
-    return locationRepository.findByHomeId(homeId);
+    // If no homeId provided, use the first home (MVP supports single home)
+    const actualHomeId = homeId ?? (await getFirstHome()).id;
+    return locationRepository.findByHomeId(actualHomeId);
   } catch (error) {
     console.error('Failed to get locations:', error);
     throw new Error('Failed to fetch locations');

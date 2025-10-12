@@ -82,6 +82,15 @@ export function resetDatabase() {
   database.exec('DELETE FROM categories');
   database.exec('DELETE FROM homes');
 
+  // Reset auto-increment sequences to ensure consistent IDs after reset
+  database.exec(
+    `DELETE FROM sqlite_sequence WHERE name IN (
+      'homes', 'categories', 'locations', 'assets',
+      'service_providers', 'maintenance_records',
+      'maintenance_tasks', 'attachments'
+    )`
+  );
+
   console.log('Database reset complete');
 
   // Reseed

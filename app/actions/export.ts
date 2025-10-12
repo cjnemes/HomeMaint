@@ -8,6 +8,7 @@ import {
   maintenanceTaskRepository,
   attachmentRepository,
 } from '@/lib/db/repositories';
+import { getFirstHome } from './assets';
 
 /**
  * Export all data as JSON for complete backup
@@ -43,9 +44,11 @@ export async function exportAllDataAsJSON(): Promise<string> {
  */
 export async function exportAssetsAsCSV(): Promise<string> {
   try {
-    const assets = assetRepository.findByHomeId(1);
-    const categories = categoryRepository.findByHomeId(1);
-    const locations = locationRepository.findByHomeId(1);
+    // Get the first home (MVP supports single home)
+    const homeId = (await getFirstHome()).id;
+    const assets = assetRepository.findByHomeId(homeId);
+    const categories = categoryRepository.findByHomeId(homeId);
+    const locations = locationRepository.findByHomeId(homeId);
 
     // Create category and location lookup maps
     const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
@@ -105,8 +108,10 @@ export async function exportAssetsAsCSV(): Promise<string> {
  */
 export async function exportMaintenanceAsCSV(): Promise<string> {
   try {
+    // Get the first home (MVP supports single home)
+    const homeId = (await getFirstHome()).id;
     const records = maintenanceRecordRepository.findAll();
-    const assets = assetRepository.findByHomeId(1);
+    const assets = assetRepository.findByHomeId(homeId);
 
     // Create asset lookup map
     const assetMap = new Map(assets.map((a) => [a.id, a.name]));
@@ -159,8 +164,10 @@ export async function exportMaintenanceAsCSV(): Promise<string> {
  */
 export async function exportTasksAsCSV(): Promise<string> {
   try {
+    // Get the first home (MVP supports single home)
+    const homeId = (await getFirstHome()).id;
     const tasks = maintenanceTaskRepository.findAll();
-    const assets = assetRepository.findByHomeId(1);
+    const assets = assetRepository.findByHomeId(homeId);
 
     // Create asset lookup map
     const assetMap = new Map(assets.map((a) => [a.id, a.name]));
@@ -214,14 +221,23 @@ export async function exportTasksAsCSV(): Promise<string> {
  * Helper function to convert data to CSV format
  */
 function convertToCSV(headers: string[], rows: (string | number)[][]): string {
-  // Escape CSV fields
+  // Escape CSV fields and prevent formula injection
   const escapeField = (field: string | number): string => {
     const str = String(field);
-    // If field contains comma, quote, or newline, wrap in quotes and escape quotes
-    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-      return `"${str.replace(/"/g, '""')}"`;
+
+    // Prevent CSV formula injection: prepend apostrophe if field starts with formula characters
+    // This prevents Excel/LibreOffice from executing formulas when CSV is opened
+    const formulaChars = ['=', '+', '-', '@', '\t', '\r'];
+    let sanitized = str;
+    if (formulaChars.some((char) => str.startsWith(char))) {
+      sanitized = `'${str}`;
     }
-    return str;
+
+    // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+    if (sanitized.includes(',') || sanitized.includes('"') || sanitized.includes('\n')) {
+      return `"${sanitized.replace(/"/g, '""')}"`;
+    }
+    return sanitized;
   };
 
   // Build CSV string

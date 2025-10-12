@@ -25,8 +25,8 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
   // Fetch data from database
   const [asset, categories, locations, maintenanceRecords, tasks, attachments] = await Promise.all([
     getAssetById(assetId),
-    getCategories(1),
-    getLocations(1),
+    getCategories(),
+    getLocations(),
     getMaintenanceRecords(assetId),
     getTasks(assetId),
     getAttachmentsByAssetId(assetId),

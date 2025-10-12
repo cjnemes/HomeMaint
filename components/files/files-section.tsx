@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FileText, Upload as UploadIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,17 +16,17 @@ interface FilesSectionProps {
   homeId?: number;
 }
 
-export function FilesSection({ entityType, entityId, attachments, homeId = 1 }: FilesSectionProps) {
+export function FilesSection({ entityType, entityId, attachments, homeId }: FilesSectionProps) {
   const [showUpload, setShowUpload] = useState(false);
+  const router = useRouter();
 
   const handleUploadComplete = () => {
     setShowUpload(false);
-    // In a real app, we'd use router.refresh() or optimistic updates
-    window.location.reload();
+    router.refresh(); // Revalidate server components without full page reload
   };
 
   const handleDelete = () => {
-    window.location.reload();
+    router.refresh(); // Revalidate server components without full page reload
   };
 
   return (

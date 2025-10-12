@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { attachmentRepository } from '@/lib/db/repositories/attachment.repository';
+import { getFirstHome } from './assets';
 import type { Attachment, CreateAttachment } from '@/lib/db/types';
 
 // File upload constants
@@ -59,9 +60,12 @@ export async function uploadAttachment(
   formData: FormData,
   entityType: 'asset' | 'maintenance_record',
   entityId: number,
-  homeId: number = 1
+  homeId?: number
 ): Promise<Attachment> {
   try {
+    // If no homeId provided, use the first home (MVP supports single home)
+    const actualHomeId = homeId ?? (await getFirstHome()).id;
+
     const file = formData.get('file') as File;
     if (!file) {
       throw new Error('No file provided');
@@ -89,12 +93,22 @@ export async function uploadAttachment(
     const fileCategory = formData.get('category') as string | null;
     const description = formData.get('description') as string | null;
 
+    // Sanitize filename: remove path separators, control characters, and dangerous characters
+    const sanitizeFilename = (filename: string): string => {
+      return filename
+        .replace(/[\/\\]/g, '_') // Replace path separators
+        .replace(/[\x00-\x1f\x7f]/g, '') // Remove control characters
+        .replace(/[<>:"|?*]/g, '_') // Replace filesystem-dangerous characters
+        .substring(0, 255) // Limit length
+        .trim();
+    };
+
     // Create attachment data
     const attachmentData: CreateAttachment = {
-      home_id: homeId,
+      home_id: actualHomeId,
       asset_id: entityType === 'asset' ? entityId : null,
       maintenance_record_id: entityType === 'maintenance_record' ? entityId : null,
-      file_name: file.name,
+      file_name: sanitizeFilename(file.name),
       file_path: dataUrl, // Store base64 data URL
       file_size: file.size,
       mime_type: file.type,

@@ -127,7 +127,7 @@ export function AddAssetDialog({ categories = [], locations = [], homeId }: AddA
                       <FormLabel>Category</FormLabel>
                       <Select
                         onValueChange={(value) => field.onChange(parseInt(value))}
-                        value={field.value?.toString()}
+                        value={field.value?.toString() ?? ''}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -155,7 +155,7 @@ export function AddAssetDialog({ categories = [], locations = [], homeId }: AddA
                       <FormLabel>Location</FormLabel>
                       <Select
                         onValueChange={(value) => field.onChange(parseInt(value))}
-                        value={field.value?.toString()}
+                        value={field.value?.toString() ?? ''}
                       >
                         <FormControl>
                           <SelectTrigger>
