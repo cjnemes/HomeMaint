@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { OfflineIndicator } from '@/components/ui/offline-indicator';
 import { Toaster } from '@/components/ui/sonner';
+import { OnboardingProvider } from '@/components/onboarding/onboarding-provider';
 
 export const metadata: Metadata = {
   title: 'HomeMaint - Home Maintenance Tracker',
@@ -36,9 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col bg-pattern">
         <OfflineIndicator />
         <Toaster />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <OnboardingProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </OnboardingProvider>
       </body>
     </html>
   );
