@@ -87,8 +87,22 @@ export const createServiceProviderSchema = z.object({
   company_name: z.string().min(1, 'Company name is required').max(200),
   contact_name: z.string().max(100).nullable().optional(),
   phone: z.string().max(20).nullable().optional(),
-  email: z.string().email().max(255).nullable().optional(),
-  website: z.string().url().max(255).nullable().optional(),
+  email: z
+    .string()
+    .max(255)
+    .optional()
+    .refine((val) => !val || val === '' || z.string().email().safeParse(val).success, {
+      message: 'Invalid email',
+    })
+    .transform((val) => (val === '' ? null : val)),
+  website: z
+    .string()
+    .max(255)
+    .optional()
+    .refine((val) => !val || val === '' || z.string().url().safeParse(val).success, {
+      message: 'Invalid URL',
+    })
+    .transform((val) => (val === '' ? null : val)),
   address_line1: z.string().max(255).nullable().optional(),
   address_line2: z.string().max(255).nullable().optional(),
   city: z.string().max(100).nullable().optional(),

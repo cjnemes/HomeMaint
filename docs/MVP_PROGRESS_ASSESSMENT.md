@@ -436,14 +436,39 @@ An application is "usable" when a real user can:
 3. ✅ Documentation updates (user guide, FAQ)
 4. ✅ Performance testing and optimization
 
-### Post-MVP Enhancements (Future)
+### Post-MVP Enhancements - Recently Completed
 
-1. Service Providers management (already in navigation)
-2. Enhanced notifications and reminders
-3. Data import functionality
-4. Advanced reporting and analytics
-5. Multi-home support
-6. Cloud backup (optional)
+1. ✅ **Service Providers Management** - COMPLETE (Oct 17, 2025)
+   - Full CRUD operations for service providers
+   - Add/Edit/Delete provider dialogs
+   - Search and filter functionality
+   - Preferred provider marking (star icon)
+   - Professional details (license, insurance, rating)
+   - Contact information (phone, email, website, address)
+   - Service types with badge display
+   - Implementation: `app/actions/service-providers.ts`, `components/service-providers/`
+
+2. ✅ **General Settings** - COMPLETE (Oct 17, 2025)
+   - Home information management
+   - Full address editing
+   - Property details (year built, square footage, lot size)
+   - Purchase information tracking
+   - Implementation: `app/actions/home.ts`, `components/settings/general-settings.tsx`
+
+3. ✅ **Notifications Settings UI** - COMPLETE (Oct 17, 2025)
+   - Notification preferences interface
+   - Task reminders, warranty expiration alerts
+   - Email notification settings
+   - Note: Backend notification logic for future implementation
+   - Implementation: `components/settings/notifications-settings.tsx`
+
+### Future Enhancements (Backlog)
+
+1. Enhanced notifications and reminders (backend logic)
+2. Data import functionality
+3. Advanced reporting and analytics
+4. Multi-home support
+5. Cloud backup (optional)
 
 ---
 
