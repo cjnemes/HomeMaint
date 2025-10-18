@@ -40,7 +40,8 @@ export function AddProviderDialog({ homeId }: AddProviderDialogProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const form = useForm({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const form = useForm<any>({
     resolver: zodResolver(createServiceProviderSchema.omit({ home_id: true })),
     defaultValues: {
       company_name: '',

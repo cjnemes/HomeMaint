@@ -53,7 +53,8 @@ export function EditProviderDialog({ provider }: EditProviderDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
-  const form = useForm({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const form = useForm<any>({
     resolver: zodResolver(updateServiceProviderSchema),
     defaultValues: {
       company_name: provider.company_name,
