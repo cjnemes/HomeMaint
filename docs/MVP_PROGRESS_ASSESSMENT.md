@@ -487,6 +487,15 @@ An application is "usable" when a real user can:
    - Note: Backend notification logic for future implementation
    - Implementation: `components/settings/notifications-settings.tsx`
 
+4. ✅ **User Onboarding** - COMPLETE (Oct 17, 2025)
+   - 3-step welcome wizard on first launch
+   - Feature overview with screenshots
+   - Sample data option for new users
+   - Quick tour of key features
+   - First-run detection using localStorage
+   - Sample data generator (4 assets, 3 records, 3 tasks, 3 providers)
+   - Implementation: `components/onboarding/`, `lib/sample-data.ts`, `app/actions/onboarding.ts`
+
 ### Future Enhancements (Backlog)
 
 1. Enhanced notifications and reminders (backend logic)

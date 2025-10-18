@@ -2,9 +2,9 @@
 
 ## HomeMaint - Home Maintenance & Asset Tracking System
 
-**Version:** 1.0
-**Last Updated:** October 5, 2025
-**Status:** Draft
+**Version:** 1.1
+**Last Updated:** October 17, 2025
+**Status:** Production
 
 ---
 
@@ -437,13 +437,16 @@ ServiceProvider (1) ─────< (N) MaintenanceRecord
 
 ## 9. Deployment Architecture
 
-### 9.1 MVP Deployment (Local-First)
+### 9.1 MVP Deployment (Local-First PWA)
 
-**Package as:**
+**Current Implementation:**
 
-- PWA accessible via GitHub Pages or Vercel
-- Desktop app: Electron or Tauri
-- Mobile: PWA or Capacitor
+- Progressive Web App (PWA) hosted on Vercel
+- Installable on desktop (macOS, Windows, Linux)
+- Installable on mobile (iOS, Android)
+- Works offline with service workers
+- Local SQLite database (better-sqlite3)
+- Local file storage
 
 **Benefits:**
 
@@ -451,6 +454,8 @@ ServiceProvider (1) ─────< (N) MaintenanceRecord
 - No database hosting costs
 - Privacy by default
 - Simple deployment
+- Cross-platform without native builds
+- Automatic updates via web
 
 ### 9.2 Cloud Deployment (Future)
 
@@ -554,31 +559,53 @@ ServiceProvider (1) ─────< (N) MaintenanceRecord
 
 ---
 
-## 15. Recommended Tech Stack for MVP
+## 15. Production Tech Stack (As Implemented)
+
+**Framework:**
+
+- Next.js 14+ (App Router)
+- React 18 + TypeScript 5 (strict mode)
+- Server Actions for mutations
+
+**Backend:**
+
+- Next.js API Routes + Server Actions
+- better-sqlite3 (SQLite for Node.js)
+- File-based database: `data/homemaint.db`
 
 **Frontend:**
 
-- React 18 + TypeScript
-- Vite (build tool)
-- Zustand (state management)
-- React Router
-- shadcn/ui (UI components)
-- React Hook Form + Zod
-- sql.js (SQLite in browser)
+- shadcn/ui components (Tailwind CSS + Radix UI)
+- React Hook Form + Zod validation
+- sonner for notifications
+- date-fns for date handling
+- Lucide React icons
+
+**PWA:**
+
+- @ducanh2912/next-pwa
+- Service workers for offline support
+- Manifest for installability
 
 **Development:**
 
 - TypeScript strict mode
 - ESLint + Prettier
-- Vitest for testing
-- GitHub for version control
+- Vitest (unit tests)
+- React Testing Library (component tests)
+- Playwright (E2E tests)
+- Husky (pre-commit hooks)
+
+**Monitoring:**
+
+- Sentry for error tracking
 
 **Deployment:**
 
-- Vercel or GitHub Pages (static hosting)
-- PWA for offline capability
+- Vercel (or any Node.js hosting)
+- PWA installable on all platforms
 
-**Total Infrastructure Cost for MVP: $0**
+**Total Infrastructure Cost: $0** (free tier hosting)
 
 ---
 
