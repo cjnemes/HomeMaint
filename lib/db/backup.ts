@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync } from 'fs';
-import { readdir, unlink, stat } from 'fs/promises';
+import { readdir, unlink, stat, copyFile } from 'fs/promises';
 import { join } from 'path';
 import type Database from 'better-sqlite3';
 import { db } from './database';
+import { sanitizeError, formatBytes, validateFilename, sleep } from '../utils/infrastructure';
 
 /**
  * Backup metadata interface
@@ -66,7 +67,7 @@ export class BackupService {
       };
 
       console.log(
-        `Backup created successfully: ${filename} (${this.formatBytes(stats.size)})`
+        `Backup created successfully: ${filename} (${formatBytes(stats.size)})`
       );
 
       // Clean up old backups
@@ -75,7 +76,7 @@ export class BackupService {
       return backupInfo;
     } catch (error) {
       console.error('Failed to create backup:', error);
-      throw new Error(`Backup creation failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -143,12 +144,13 @@ export class BackupService {
    */
   public async deleteBackup(filename: string): Promise<boolean> {
     try {
-      const backupPath = join(this.backupDir, filename);
+      // Validate filename with strict rules
+      validateFilename(filename, {
+        allowedExtensions: ['.db'],
+        pattern: /^homemaint-[\d-]+T[\d-]+Z\.db$/,
+      });
 
-      // Validate filename to prevent directory traversal
-      if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
-        throw new Error('Invalid filename');
-      }
+      const backupPath = join(this.backupDir, filename);
 
       if (!existsSync(backupPath)) {
         throw new Error('Backup file not found');
@@ -159,7 +161,7 @@ export class BackupService {
       return true;
     } catch (error) {
       console.error(`Failed to delete backup ${filename}:`, error);
-      throw new Error(`Failed to delete backup: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -169,6 +171,12 @@ export class BackupService {
    */
   public async restoreFromBackup(backupFilename: string): Promise<void> {
     try {
+      // Validate filename
+      validateFilename(backupFilename, {
+        allowedExtensions: ['.db'],
+        pattern: /^homemaint-[\d-]+T[\d-]+Z\.db$/,
+      });
+
       const backupPath = join(this.backupDir, backupFilename);
 
       // Validate backup exists
@@ -189,20 +197,40 @@ export class BackupService {
         testDb.close();
       }
 
-      // Close current database connection
-      // Note: This requires the app to restart to reconnect
-      console.log('Restoring from backup - database will be replaced');
+      console.log('Restoring from backup - closing database connection...');
 
-      // Copy backup to main database location
+      // 1. Close current database connection
+      db.close();
+
+      // 2. Wait for database to fully close
+      await sleep(1000);
+
+      // 3. Create emergency backup of current database
       const dbPath = join(process.cwd(), 'data', 'homemaint.db');
-      const fs = await import('fs/promises');
-      await fs.copyFile(backupPath, dbPath);
+      const emergencyBackup = join(
+        this.backupDir,
+        `homemaint-pre-restore-${new Date().toISOString().replace(/[:.]/g, '-')}.db`
+      );
+
+      if (existsSync(dbPath)) {
+        await copyFile(dbPath, emergencyBackup);
+        console.log(`Emergency backup created: ${emergencyBackup}`);
+      }
+
+      // 4. Restore from backup
+      await copyFile(backupPath, dbPath);
 
       console.log(`Database restored from backup: ${backupFilename}`);
-      console.log('IMPORTANT: Application restart required for changes to take effect');
+      console.log(`Emergency backup saved to: ${emergencyBackup}`);
+      console.log('IMPORTANT: Application will restart to apply changes');
+
+      // 5. Force application restart (let process manager handle it)
+      setTimeout(() => {
+        process.exit(0);
+      }, 1000);
     } catch (error) {
       console.error('Failed to restore from backup:', error);
-      throw new Error(`Restore failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -212,19 +240,6 @@ export class BackupService {
   public async getTotalBackupSize(): Promise<number> {
     const backups = await this.listBackups();
     return backups.reduce((total, backup) => total + backup.size, 0);
-  }
-
-  /**
-   * Format bytes to human-readable string
-   */
-  private formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   /**
@@ -244,6 +259,9 @@ export class BackupService {
         console.error('Scheduled backup failed:', error);
       }
     }, intervalMs);
+
+    // Allow process to exit cleanly if this is the only thing running
+    intervalId.unref();
 
     // Create initial backup
     this.createBackup().catch((error) => {

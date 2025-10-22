@@ -32,6 +32,8 @@ export class DatabaseService {
 
   /**
    * Initialize database connection with retry logic
+   * Note: Uses immediate retries since better-sqlite3 is synchronous
+   * and this only runs once at application startup
    */
   private initializeDatabase(dbPath: string, maxRetries = 3): Database.Database {
     let lastError: Error | null = null;
@@ -50,16 +52,11 @@ export class DatabaseService {
         lastError = error as Error;
         console.warn(`Database connection attempt ${attempt} failed:`, error);
 
+        // For SQLite file locks or temporary issues, retry immediately
+        // No sleep needed - better-sqlite3 is synchronous anyway
+        // and this only runs once at startup
         if (attempt < maxRetries) {
-          // Exponential backoff: 1s, 2s, 4s
-          const delay = Math.pow(2, attempt - 1) * 1000;
-          console.log(`Retrying in ${delay}ms...`);
-
-          // Synchronous sleep for simplicity in constructor
-          const start = Date.now();
-          while (Date.now() - start < delay) {
-            // Busy wait
-          }
+          console.log(`Retrying immediately (attempt ${attempt + 1}/${maxRetries})...`);
         }
       }
     }
@@ -75,28 +72,40 @@ export class DatabaseService {
    * Setup graceful shutdown handlers
    */
   private setupShutdownHandlers(): void {
+    let isShuttingDown = false;
+
     const shutdown = async () => {
+      if (isShuttingDown) {
+        console.log('Shutdown already in progress');
+        return;
+      }
+      isShuttingDown = true;
+
       console.log('Shutting down database connection...');
       try {
         // Run optimization before closing
         this.db.prepare('PRAGMA optimize').run();
         this.close();
         console.log('Database connection closed successfully');
-        process.exit(0);
       } catch (error) {
         console.error('Error during database shutdown:', error);
-        process.exit(1);
       }
     };
 
     // Handle various shutdown signals
-    process.on('SIGTERM', shutdown);
-    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', async () => {
+      await shutdown();
+      process.exit(0);
+    });
 
-    // Handle uncaught errors
-    process.on('uncaughtException', (error) => {
-      console.error('Uncaught exception:', error);
-      shutdown();
+    process.on('SIGINT', async () => {
+      await shutdown();
+      process.exit(0);
+    });
+
+    // Cleanup before process exit (but don't prevent crash on uncaughtException)
+    process.on('beforeExit', async () => {
+      await shutdown();
     });
   }
 

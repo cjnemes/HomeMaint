@@ -1,4 +1,5 @@
 import { db } from './database';
+import { sanitizeError, formatBytes } from '../utils/infrastructure';
 
 /**
  * Database maintenance statistics
@@ -46,7 +47,7 @@ export class DatabaseMaintenanceService {
       console.log('Full database optimization complete');
     } catch (error) {
       console.error('Database optimization failed:', error);
-      throw new Error(`Optimization failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -65,7 +66,7 @@ export class DatabaseMaintenanceService {
       console.log('Quick optimization complete');
     } catch (error) {
       console.error('Quick optimization failed:', error);
-      throw new Error(`Quick optimization failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -83,7 +84,7 @@ export class DatabaseMaintenanceService {
       console.log('VACUUM complete');
     } catch (error) {
       console.error('VACUUM failed:', error);
-      throw new Error(`VACUUM failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -147,6 +148,9 @@ export class DatabaseMaintenanceService {
       24 * 60 * 60 * 1000
     ); // 24 hours
 
+    // Allow process to exit cleanly
+    dailyInterval.unref();
+
     // Weekly full optimization (every 7 days)
     const weeklyInterval = setInterval(
       async () => {
@@ -166,6 +170,9 @@ export class DatabaseMaintenanceService {
       },
       7 * 24 * 60 * 60 * 1000
     ); // 7 days
+
+    // Allow process to exit cleanly
+    weeklyInterval.unref();
 
     console.log('Automatic maintenance scheduled');
 
@@ -211,7 +218,7 @@ export class DatabaseMaintenanceService {
       return { ok, errors };
     } catch (error) {
       console.error('Integrity check failed:', error);
-      throw new Error(`Integrity check failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -231,10 +238,9 @@ export class DatabaseMaintenanceService {
         message: ok ? 'Database quick check passed' : result.quick_check,
       };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         ok: false,
-        message: `Quick check failed: ${errorMessage}`,
+        message: sanitizeError(error),
       };
     }
   }
@@ -265,21 +271,8 @@ export class DatabaseMaintenanceService {
       return violations;
     } catch (error) {
       console.error('Foreign key check failed:', error);
-      throw new Error(`Foreign key check failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
-  }
-
-  /**
-   * Format bytes to human-readable string
-   */
-  public formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 }
 

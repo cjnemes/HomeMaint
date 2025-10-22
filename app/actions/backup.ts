@@ -2,6 +2,7 @@
 
 import { backupService } from '@/lib/db/backup';
 import type { BackupInfo } from '@/lib/db/backup';
+import { sanitizeError, formatBytes as formatBytesUtil } from '@/lib/utils/infrastructure';
 
 /**
  * Create a manual backup of the database
@@ -12,7 +13,7 @@ export async function createManualBackup(): Promise<BackupInfo> {
     return backup;
   } catch (error) {
     console.error('Failed to create manual backup:', error);
-    throw new Error('Failed to create backup');
+    throw new Error(sanitizeError(error));
   }
 }
 
@@ -24,7 +25,7 @@ export async function getBackups(): Promise<BackupInfo[]> {
     return await backupService.listBackups();
   } catch (error) {
     console.error('Failed to list backups:', error);
-    throw new Error('Failed to list backups');
+    throw new Error(sanitizeError(error));
   }
 }
 
@@ -36,7 +37,7 @@ export async function deleteBackup(filename: string): Promise<boolean> {
     return await backupService.deleteBackup(filename);
   } catch (error) {
     console.error('Failed to delete backup:', error);
-    throw new Error('Failed to delete backup');
+    throw new Error(sanitizeError(error));
   }
 }
 
@@ -49,7 +50,7 @@ export async function restoreFromBackup(filename: string): Promise<void> {
     await backupService.restoreFromBackup(filename);
   } catch (error) {
     console.error('Failed to restore from backup:', error);
-    throw new Error('Failed to restore from backup');
+    throw new Error(sanitizeError(error));
   }
 }
 
@@ -67,13 +68,6 @@ export async function getTotalBackupSize(): Promise<number> {
 
 /**
  * Format bytes to human-readable string
+ * Re-exported from utils for convenience
  */
-export function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
-
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-}
+export const formatBytes = formatBytesUtil;

@@ -1,7 +1,8 @@
 import { writeFile, readFile, unlink, mkdir, stat } from 'fs/promises';
 import { existsSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import crypto from 'crypto';
+import { sanitizeError } from '../utils/infrastructure';
 
 /**
  * File metadata interface
@@ -20,20 +21,31 @@ export interface StoredFile {
  */
 export class FileStorageService {
   private baseDir: string;
+  private readonly MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+  private readonly ALLOWED_MIME_TYPES = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    'image/heic',
+    'application/pdf',
+    'text/plain',
+  ];
 
   constructor() {
     this.baseDir = join(process.cwd(), 'data', 'attachments');
-    this.ensureStorageDirectory();
+    // Don't create directory in constructor - do it when needed
   }
 
   /**
    * Ensure storage directory exists
+   * This is called at the start of operations that need the directory
    */
-  private ensureStorageDirectory(): void {
+  private async ensureStorageDirectory(): Promise<void> {
     if (!existsSync(this.baseDir)) {
-      mkdir(this.baseDir, { recursive: true })
-        .then(() => console.log(`Created attachments directory: ${this.baseDir}`))
-        .catch((error) => console.error('Failed to create attachments directory:', error));
+      await mkdir(this.baseDir, { recursive: true });
+      console.log(`Created attachments directory: ${this.baseDir}`);
     }
   }
 
@@ -48,6 +60,23 @@ export class FileStorageService {
     originalFilename: string
   ): Promise<StoredFile> {
     try {
+      // Ensure base directory exists
+      await this.ensureStorageDirectory();
+
+      // Validate file size
+      if (file.length > this.MAX_FILE_SIZE) {
+        throw new Error(
+          `File too large: ${file.length} bytes. Maximum allowed: ${this.MAX_FILE_SIZE} bytes`
+        );
+      }
+
+      // Validate MIME type
+      if (!this.ALLOWED_MIME_TYPES.includes(mimeType)) {
+        throw new Error(
+          `File type not allowed: ${mimeType}. Allowed types: ${this.ALLOWED_MIME_TYPES.join(', ')}`
+        );
+      }
+
       // Generate hash for deduplication and unique filename
       const hash = crypto.createHash('sha256').update(file).digest('hex');
 
@@ -62,7 +91,7 @@ export class FileStorageService {
       const yearMonth = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
       const dir = join(this.baseDir, yearMonth);
 
-      // Ensure directory exists
+      // Ensure month directory exists
       await mkdir(dir, { recursive: true });
 
       const absolutePath = join(dir, filename);
@@ -87,7 +116,7 @@ export class FileStorageService {
 
       const stats = await stat(absolutePath);
 
-      console.log(`Stored file: ${relativePath} (${this.formatBytes(stats.size)})`);
+      console.log(`Stored file: ${relativePath} (${stats.size} bytes)`);
 
       return {
         relativePath,
@@ -98,7 +127,7 @@ export class FileStorageService {
       };
     } catch (error) {
       console.error('Failed to store file:', error);
-      throw new Error(`File storage failed: ${error}`);
+      throw new Error(sanitizeError(error));
     }
   }
 
@@ -238,25 +267,49 @@ export class FileStorageService {
 
   /**
    * Check if path contains directory traversal attempts
+   * Uses comprehensive checks including URL encoding and path resolution
    */
   private containsPathTraversal(path: string): boolean {
-    // Check for directory traversal patterns
-    const dangerous = ['..', '~', '//', '\\\\', '\0'];
+    // Normalize the path first
+    let normalized = path;
 
-    return dangerous.some((pattern) => path.includes(pattern));
-  }
+    // Try to decode URL encoding
+    try {
+      normalized = decodeURIComponent(path);
+    } catch {
+      // Invalid URL encoding is suspicious
+      return true;
+    }
 
-  /**
-   * Format bytes to human-readable string
-   */
-  private formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
+    // Check for dangerous patterns (case-insensitive)
+    const dangerous = [
+      '..',       // Directory traversal
+      '~',        // Home directory
+      '//',       // Double slashes
+      '\\\\',     // Double backslashes
+      '\0',       // Null byte
+      '%2e',      // URL-encoded dot
+      '%2f',      // URL-encoded forward slash
+      '%5c',      // URL-encoded backslash
+    ];
 
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const lowerPath = normalized.toLowerCase();
+    for (const pattern of dangerous) {
+      if (lowerPath.includes(pattern.toLowerCase())) {
+        return true;
+      }
+    }
 
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    // Verify resolved path stays within base directory
+    const basePath = resolve(process.cwd(), 'data');
+    const absolutePath = resolve(process.cwd(), 'data', normalized);
+
+    // Path must start with base directory
+    if (!absolutePath.startsWith(basePath)) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
