@@ -42,7 +42,10 @@ HomeMaint MVP is **feature-complete and production-ready**! All core features ha
 - ✅ Comprehensive Testing (Browser automation with Playwright MCP)
 - ✅ User Onboarding with Sample Data
 
-**Recent Testing:** Comprehensive browser testing completed October 17, 2025. All features verified working. See [Comprehensive Test Report](docs/COMPREHENSIVE_TEST_REPORT.md) for details.
+**Recent Testing:**
+
+- **UAT Testing**: Completed October 26, 2025. All features verified working with 115/115 unit tests passing. See [UAT Report](UAT_REPORT_2025-10-26.md) for details.
+- **Browser Testing**: Comprehensive cross-browser testing completed October 17, 2025. See [Comprehensive Test Report](docs/COMPREHENSIVE_TEST_REPORT.md) for details.
 
 ## Getting Started
 
