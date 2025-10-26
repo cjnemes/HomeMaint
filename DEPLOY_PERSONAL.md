@@ -357,6 +357,27 @@ MAX_BACKUPS=30  # Change this value
    docker-compose start
    ```
 
+### Reset All Data (Starting Fresh)
+
+**Location:** Settings → Data Management → Reset All Data
+
+This feature allows you to clear all data and start fresh:
+
+- ✅ **Automatic backup created** before reset
+- ✅ **Safe implementation** - uses SQL DELETE statements (doesn't delete database file)
+- ✅ **Auto-recovery** - database reseeds with default home/categories/locations
+- ✅ **No server restart needed** - operation completes without crashing
+
+**How it works:**
+
+1. Creates automatic backup in `data/backups/`
+2. Deletes all data from tables in correct order (respects foreign keys)
+3. Resets auto-increment sequences
+4. Runs VACUUM to reclaim space
+5. Reseeds database with default home on next access
+
+**Important:** The automatic backup can be restored from Settings if you change your mind.
+
 ### Database Maintenance
 
 The app includes automatic database optimization. For manual optimization:

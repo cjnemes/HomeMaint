@@ -22,9 +22,16 @@ export async function getFirstHome(): Promise<Home> {
       console.warn('No homes found - auto-reseeding database');
       const { seedDatabase } = await import('@/lib/db/seed');
       const seededData = seedDatabase();
-      if (!seededData || !seededData.home) {
-        throw new Error('Failed to auto-reseed database');
+
+      if (!seededData) {
+        throw new Error('Failed to auto-reseed database - repositories not ready');
       }
+
+      if (!seededData.home) {
+        throw new Error('Failed to auto-reseed database - no home created');
+      }
+
+      console.log('Auto-reseed successful, home ID:', seededData.home.id);
       return seededData.home;
     }
 

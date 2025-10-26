@@ -85,16 +85,28 @@ export async function resetAllData(): Promise<void> {
     // Create a backup before resetting
     await backupService.createBackup();
 
-    // Delete the database file
-    const { unlinkSync, existsSync } = await import('fs');
-    const { join } = await import('path');
-    const dbPath = join(process.cwd(), 'data', 'homemaint.db');
+    // Use SQL to clear all data instead of deleting the file
+    // This keeps the connection alive and prevents server crashes
+    const { db } = await import('@/lib/db/database');
+    const database = db.getDatabase();
 
-    if (existsSync(dbPath)) {
-      unlinkSync(dbPath);
-    }
+    // Delete all data from tables (in correct order due to foreign keys)
+    database.prepare('DELETE FROM attachments').run();
+    database.prepare('DELETE FROM maintenance_records').run();
+    database.prepare('DELETE FROM maintenance_tasks').run();
+    database.prepare('DELETE FROM assets').run();
+    database.prepare('DELETE FROM service_providers').run();
+    database.prepare('DELETE FROM locations').run();
+    database.prepare('DELETE FROM categories').run();
+    database.prepare('DELETE FROM homes').run();
 
-    // Database will be recreated on next access by the initialization code
+    // Reset SQLite sequences
+    database.prepare('DELETE FROM sqlite_sequence').run();
+
+    // Vacuum to reclaim space
+    database.prepare('VACUUM').run();
+
+    // Database will be re-initialized on next access with default data
   } catch (error) {
     console.error('Failed to reset data:', error);
     throw new Error(sanitizeError(error));

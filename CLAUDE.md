@@ -166,6 +166,7 @@ npm run lint
 ### Anti-Patterns to Avoid
 
 **✅ CURRENT STATUS: Zero anti-patterns detected (validated Oct 26, 2025)**
+**📚 Documented:** 6 anti-pattern categories with prevention strategies
 
 1. **No Float for Money** ✅
    - HomeMaint doesn't handle financial transactions
@@ -189,6 +190,27 @@ npm run lint
    - Batch queries where possible
    - Use JOINs for related data
    - Never query inside loops
+
+6. **No Deleting Active Database Files** ✅
+   - **Discovered:** Oct 26, 2025 during "Reset All Data" implementation
+   - **Issue:** Deleting SQLite files while server has them open crashes the server
+   - **Example (BAD):**
+     ```typescript
+     // ❌ Crashes server - connection still open!
+     const dbPath = join(process.cwd(), 'data', 'homemaint.db');
+     unlinkSync(dbPath);
+     ```
+   - **Solution (GOOD):**
+     ```typescript
+     // ✅ Use SQL operations to clear data
+     const database = db.getDatabase();
+     database.prepare('DELETE FROM table_name').run();
+     database.prepare('DELETE FROM sqlite_sequence').run();
+     database.prepare('VACUUM').run();
+     ```
+   - **Location:** `app/actions/backup.ts:83` (resetAllData function)
+   - **Impact:** Server crash, broken user sessions, corrupted state
+   - **Prevention:** Always use SQL operations when database is in use
 
 ### Coding Conventions
 
@@ -328,6 +350,93 @@ await databaseMaintenance.optimizeQuick();
 // Check integrity
 const result = await databaseMaintenance.checkIntegrity();
 ```
+
+### Self-Healing Database Initialization
+
+**Pattern Implemented:** Oct 26, 2025
+**Location:** `app/actions/assets.ts:16` (`getFirstHome` function)
+
+**Problem:** After operations like "Reset All Data", the database may be empty, causing foreign key constraint failures when creating related records (e.g., service providers require `home_id`).
+
+**Solution:** Auto-recovery mechanism that reseeds the database when required data is missing.
+
+**Implementation Requirements:**
+
+1. **Consistent Return Types**
+
+   ```typescript
+   // ❌ BAD: Inconsistent returns break recovery
+   export function seedDatabase() {
+     const homes = homeRepository.findAll();
+     if (homes.length > 0) {
+       return; // Returns undefined!
+     }
+     // ... create home ...
+     return { home, categories, locations };
+   }
+
+   // ✅ GOOD: Always return same structure
+   export function seedDatabase() {
+     const homes = homeRepository.findAll();
+     if (homes.length > 0) {
+       return {
+         home: homes[0]!,
+         categories: categoryRepository.findByHomeId(homes[0]!.id),
+         locations: locationRepository.findByHomeId(homes[0]!.id),
+       };
+     }
+     // ... create home ...
+     return { home, categories, locations };
+   }
+   ```
+
+2. **Idempotent Seeding**
+
+   ```typescript
+   // Check before creating - safe to call multiple times
+   const existingHomes = homeRepository.findAll();
+   if (existingHomes.length > 0) {
+     return existingData; // Already seeded
+   }
+   ```
+
+3. **Clear Error Messages**
+   ```typescript
+   if (!seededData) {
+     throw new Error('Failed to auto-reseed - repositories not ready');
+   }
+   if (!seededData.home) {
+     throw new Error('Failed to auto-reseed - no home created');
+   }
+   ```
+
+**Example Usage:**
+
+```typescript
+export async function getFirstHome(): Promise<Home> {
+  const homes = homeRepository.findAll();
+
+  if (homes.length === 0) {
+    console.warn('No homes found - auto-reseeding database');
+    const seededData = seedDatabase();
+
+    if (!seededData?.home) {
+      throw new Error('Failed to auto-reseed database');
+    }
+
+    return seededData.home;
+  }
+
+  return homes[0]!;
+}
+```
+
+**Benefits:**
+
+- Recovers from empty database states automatically
+- Prevents foreign key constraint errors
+- Improves user experience (no manual intervention required)
+- Maintains data integrity after reset operations
 
 ## File Storage
 
@@ -567,7 +676,13 @@ NEXT_PUBLIC_APP_SHORT_NAME=HomeMaint
 ## Last Updated
 
 **Date:** October 26, 2025
-**Status:** MVP Complete, Production-Ready
+**Status:** MVP Complete, Production-Ready, Auto-Start Enabled (macOS LaunchAgent)
 **Coverage:** 35.58% (Target: 85% - improvement in progress)
-**Anti-Patterns:** 0 detected
+**Anti-Patterns:** 0 detected (6 categories documented with prevention strategies)
 **Architecture:** ✅ Validated (Repository Pattern optimal)
+**Recent Improvements:**
+
+- ✅ Self-healing database initialization (auto-recovery after reset)
+- ✅ Safe data reset implementation (SQL-based, no file deletion)
+- ✅ Mac local deployment with auto-start on login
+- ✅ Comprehensive backup/restore UI in Settings

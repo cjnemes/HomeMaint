@@ -11,12 +11,19 @@ export function seedDatabase() {
     const existingHomes = homeRepository.findAll();
     if (existingHomes.length > 0) {
       console.log('Database already seeded');
-      return;
+      const firstHome = existingHomes[0]!; // Safe: we checked length > 0
+      const existingCategories = categoryRepository.findByHomeId(firstHome.id);
+      const existingLocations = locationRepository.findByHomeId(firstHome.id);
+      return {
+        home: firstHome,
+        categories: existingCategories,
+        locations: existingLocations,
+      };
     }
-  } catch {
+  } catch (error) {
     // If repositories aren't initialized yet (e.g., during tests), skip seeding
-    console.log('Skipping seed check - repositories not ready');
-    return;
+    console.log('Skipping seed check - repositories not ready', error);
+    return null;
   }
 
   console.log('Seeding database with initial data...');
