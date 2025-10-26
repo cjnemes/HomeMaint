@@ -4,6 +4,9 @@ import { backupService } from '@/lib/db/backup';
 import type { BackupInfo } from '@/lib/db/backup';
 import { sanitizeError, formatBytes as formatBytesUtil } from '@/lib/utils/infrastructure';
 
+// Re-export BackupInfo type for client components
+export type { BackupInfo };
+
 /**
  * Create a manual backup of the database
  */
@@ -71,3 +74,29 @@ export async function getTotalBackupSize(): Promise<number> {
  * Re-exported from utils for convenience
  */
 export const formatBytes = formatBytesUtil;
+
+/**
+ * Reset all data in the database
+ * WARNING: This will delete ALL data and cannot be undone!
+ * A backup is automatically created before reset.
+ */
+export async function resetAllData(): Promise<void> {
+  try {
+    // Create a backup before resetting
+    await backupService.createBackup();
+
+    // Delete the database file
+    const { unlinkSync, existsSync } = await import('fs');
+    const { join } = await import('path');
+    const dbPath = join(process.cwd(), 'data', 'homemaint.db');
+
+    if (existsSync(dbPath)) {
+      unlinkSync(dbPath);
+    }
+
+    // Database will be recreated on next access by the initialization code
+  } catch (error) {
+    console.error('Failed to reset data:', error);
+    throw new Error(sanitizeError(error));
+  }
+}

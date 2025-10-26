@@ -1,6 +1,7 @@
 import { Settings } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { DataExport } from '@/components/settings/data-export';
+import { DataManagement } from '@/components/settings/data-management';
 import { GeneralSettings } from '@/components/settings/general-settings';
 import { NotificationsSettings } from '@/components/settings/notifications-settings';
 import { getFirstHome } from '@/app/actions/assets';
@@ -29,8 +30,14 @@ export default async function SettingsPage() {
         <Separator />
 
         <div>
-          <h2 className="text-lg font-semibold mb-4">Data & Privacy</h2>
+          <h2 className="text-lg font-semibold mb-4">Data Export</h2>
           <DataExport />
+        </div>
+        <Separator />
+
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Data Management</h2>
+          <DataManagement />
         </div>
       </div>
     </div>
