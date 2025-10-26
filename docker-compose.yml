@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  homemaint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: homemaint
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN:-}
+      - SENTRY_ORG=${SENTRY_ORG:-}
+      - SENTRY_PROJECT=${SENTRY_PROJECT:-}
+      - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-}
+    volumes:
+      # Persist SQLite database and uploaded files
+      - ./data:/app/data
+      # Optional: Create backups directory
+      - ./data/backups:/app/data/backups
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    networks:
+      - homemaint-network
+
+networks:
+  homemaint-network:
+    driver: bridge
+
+# Optional: Add watchtower for automatic updates
+# Uncomment to enable automatic container updates
+#  watchtower:
+#    image: containrrr/watchtower
+#    container_name: homemaint-watchtower
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    command: --interval 86400 --cleanup homemaint
+#    restart: unless-stopped
+#    networks:
+#      - homemaint-network
