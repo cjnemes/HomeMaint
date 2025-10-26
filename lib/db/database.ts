@@ -415,26 +415,37 @@ export class DatabaseService {
       {
         name: '002_filesystem_attachment_storage',
         up: (db: Database.Database) => {
+          // Check if columns already exist to make migration idempotent
+          const columns = db.prepare('PRAGMA table_info(attachments)').all() as Array<{
+            name: string;
+          }>;
+          const columnNames = new Set(columns.map((col) => col.name));
+
           // Add new column for filesystem-based storage
-          // This allows gradual migration from base64 to filesystem
-          db.exec(`
-            ALTER TABLE attachments ADD COLUMN file_path_fs TEXT;
-          `);
+          if (!columnNames.has('file_path_fs')) {
+            db.exec(`ALTER TABLE attachments ADD COLUMN file_path_fs TEXT;`);
+          }
 
           // Add column to track storage type (base64 or filesystem)
-          db.exec(`
-            ALTER TABLE attachments ADD COLUMN storage_type TEXT DEFAULT 'base64';
-          `);
+          if (!columnNames.has('storage_type')) {
+            db.exec(`ALTER TABLE attachments ADD COLUMN storage_type TEXT DEFAULT 'base64';`);
+          }
 
           // Add column for file hash (for deduplication)
-          db.exec(`
-            ALTER TABLE attachments ADD COLUMN file_hash TEXT;
-          `);
+          if (!columnNames.has('file_hash')) {
+            db.exec(`ALTER TABLE attachments ADD COLUMN file_hash TEXT;`);
+          }
 
           // Create index on file hash for deduplication lookups
-          db.exec(`
-            CREATE INDEX idx_attachments_hash ON attachments(file_hash);
-          `);
+          // Check if index exists first
+          const indexes = db.prepare('PRAGMA index_list(attachments)').all() as Array<{
+            name: string;
+          }>;
+          const indexNames = new Set(indexes.map((idx) => idx.name));
+
+          if (!indexNames.has('idx_attachments_hash')) {
+            db.exec(`CREATE INDEX idx_attachments_hash ON attachments(file_hash);`);
+          }
 
           console.log('Migration 002: Added filesystem storage columns to attachments table');
         },
@@ -492,8 +503,7 @@ export class DatabaseService {
   } {
     const pageCount = (this.db.prepare('PRAGMA page_count').get() as { page_count: number })
       .page_count;
-    const pageSize = (this.db.prepare('PRAGMA page_size').get() as { page_size: number })
-      .page_size;
+    const pageSize = (this.db.prepare('PRAGMA page_size').get() as { page_size: number }).page_size;
     const freelistCount = (
       this.db.prepare('PRAGMA freelist_count').get() as { freelist_count: number }
     ).freelist_count;

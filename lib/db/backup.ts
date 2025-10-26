@@ -1,7 +1,6 @@
 import { existsSync, mkdirSync } from 'fs';
 import { readdir, unlink, stat, copyFile } from 'fs/promises';
 import { join } from 'path';
-import type Database from 'better-sqlite3';
 import { db } from './database';
 import { sanitizeError, formatBytes, validateFilename, sleep } from '../utils/infrastructure';
 
@@ -66,9 +65,7 @@ export class BackupService {
         createdAt: new Date(),
       };
 
-      console.log(
-        `Backup created successfully: ${filename} (${formatBytes(stats.size)})`
-      );
+      console.log(`Backup created successfully: ${filename} (${formatBytes(stats.size)})`);
 
       // Clean up old backups
       await this.cleanOldBackups();
@@ -191,7 +188,7 @@ export class BackupService {
       // Test that it's a valid database
       try {
         testDb.prepare('SELECT COUNT(*) FROM sqlite_master').get();
-      } catch (error) {
+      } catch {
         throw new Error('Backup file is corrupted or invalid');
       } finally {
         testDb.close();

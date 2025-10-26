@@ -283,14 +283,14 @@ export class FileStorageService {
 
     // Check for dangerous patterns (case-insensitive)
     const dangerous = [
-      '..',       // Directory traversal
-      '~',        // Home directory
-      '//',       // Double slashes
-      '\\\\',     // Double backslashes
-      '\0',       // Null byte
-      '%2e',      // URL-encoded dot
-      '%2f',      // URL-encoded forward slash
-      '%5c',      // URL-encoded backslash
+      '..', // Directory traversal
+      '~', // Home directory
+      '//', // Double slashes
+      '\\\\', // Double backslashes
+      '\0', // Null byte
+      '%2e', // URL-encoded dot
+      '%2f', // URL-encoded forward slash
+      '%5c', // URL-encoded backslash
     ];
 
     const lowerPath = normalized.toLowerCase();
@@ -327,7 +327,7 @@ export class FileStorageService {
    * This should be run periodically as maintenance
    */
   public async cleanupOrphanedFiles(
-    referencedPaths: string[]
+    _referencedPaths: string[]
   ): Promise<{ deleted: number; errors: string[] }> {
     // TODO: Implement orphaned file cleanup
     // This requires traversing the filesystem and comparing with database

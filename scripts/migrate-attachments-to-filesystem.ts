@@ -20,7 +20,6 @@
 import { db } from '../lib/db/database';
 import { fileStorage } from '../lib/storage/file-storage';
 import { backupService } from '../lib/db/backup';
-import { attachmentRepository } from '../lib/db/repositories/attachment.repository';
 
 interface MigrationStats {
   total: number;
@@ -235,9 +234,7 @@ async function clearBase64Data(dryRun: boolean): Promise<number> {
     console.log('Verifying all files exist...');
     for (const attachment of attachments) {
       if (!fileStorage.fileExists(attachment.file_path_fs)) {
-        throw new Error(
-          `File missing: ${attachment.file_path_fs} for attachment ${attachment.id}`
-        );
+        throw new Error(`File missing: ${attachment.file_path_fs} for attachment ${attachment.id}`);
       }
     }
     console.log('✓ All files verified');

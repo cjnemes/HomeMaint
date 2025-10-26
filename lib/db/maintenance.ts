@@ -1,5 +1,5 @@
 import { db } from './database';
-import { sanitizeError, formatBytes } from '../utils/infrastructure';
+import { sanitizeError } from '../utils/infrastructure';
 
 /**
  * Database maintenance statistics
