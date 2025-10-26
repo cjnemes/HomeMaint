@@ -137,7 +137,10 @@ export interface Attachment {
   asset_id?: number | null;
   maintenance_record_id?: number | null;
   file_name: string;
-  file_path: string;
+  file_path: string; // Legacy: base64 data URL or filesystem path
+  file_path_fs?: string | null; // New: filesystem path only
+  storage_type?: string | null; // 'base64' or 'filesystem'
+  file_hash?: string | null; // SHA-256 hash for deduplication
   file_size?: number | null;
   mime_type?: string | null;
   file_type?: string | null;

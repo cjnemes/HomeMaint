@@ -13,9 +13,9 @@ export class DatabaseService {
       mkdirSync(dataDir, { recursive: true });
     }
 
-    // Initialize database
+    // Initialize database with retry logic
     const dbPath = join(dataDir, 'homemaint.db');
-    this.db = new Database(dbPath);
+    this.db = this.initializeDatabase(dbPath);
 
     // Enable foreign keys
     this.db.pragma('foreign_keys = ON');
@@ -25,6 +25,88 @@ export class DatabaseService {
 
     // Seed database with initial data if needed
     this.seedIfNeeded();
+
+    // Setup graceful shutdown
+    this.setupShutdownHandlers();
+  }
+
+  /**
+   * Initialize database connection with retry logic
+   * Note: Uses immediate retries since better-sqlite3 is synchronous
+   * and this only runs once at application startup
+   */
+  private initializeDatabase(dbPath: string, maxRetries = 3): Database.Database {
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Database connection attempt ${attempt}/${maxRetries}`);
+        const db = new Database(dbPath);
+
+        // Test connection
+        db.prepare('SELECT 1').get();
+
+        console.log('Database connection established successfully');
+        return db;
+      } catch (error) {
+        lastError = error as Error;
+        console.warn(`Database connection attempt ${attempt} failed:`, error);
+
+        // For SQLite file locks or temporary issues, retry immediately
+        // No sleep needed - better-sqlite3 is synchronous anyway
+        // and this only runs once at startup
+        if (attempt < maxRetries) {
+          console.log(`Retrying immediately (attempt ${attempt + 1}/${maxRetries})...`);
+        }
+      }
+    }
+
+    // All retries failed
+    console.error('Failed to connect to database after all retries');
+    throw new Error(
+      `Database connection failed after ${maxRetries} attempts: ${lastError?.message}`
+    );
+  }
+
+  /**
+   * Setup graceful shutdown handlers
+   */
+  private setupShutdownHandlers(): void {
+    let isShuttingDown = false;
+
+    const shutdown = async () => {
+      if (isShuttingDown) {
+        console.log('Shutdown already in progress');
+        return;
+      }
+      isShuttingDown = true;
+
+      console.log('Shutting down database connection...');
+      try {
+        // Run optimization before closing
+        this.db.prepare('PRAGMA optimize').run();
+        this.close();
+        console.log('Database connection closed successfully');
+      } catch (error) {
+        console.error('Error during database shutdown:', error);
+      }
+    };
+
+    // Handle various shutdown signals
+    process.on('SIGTERM', async () => {
+      await shutdown();
+      process.exit(0);
+    });
+
+    process.on('SIGINT', async () => {
+      await shutdown();
+      process.exit(0);
+    });
+
+    // Cleanup before process exit (but don't prevent crash on uncaughtException)
+    process.on('beforeExit', async () => {
+      await shutdown();
+    });
   }
 
   public static getInstance(): DatabaseService {
@@ -330,6 +412,33 @@ export class DatabaseService {
           `);
         },
       },
+      {
+        name: '002_filesystem_attachment_storage',
+        up: (db: Database.Database) => {
+          // Add new column for filesystem-based storage
+          // This allows gradual migration from base64 to filesystem
+          db.exec(`
+            ALTER TABLE attachments ADD COLUMN file_path_fs TEXT;
+          `);
+
+          // Add column to track storage type (base64 or filesystem)
+          db.exec(`
+            ALTER TABLE attachments ADD COLUMN storage_type TEXT DEFAULT 'base64';
+          `);
+
+          // Add column for file hash (for deduplication)
+          db.exec(`
+            ALTER TABLE attachments ADD COLUMN file_hash TEXT;
+          `);
+
+          // Create index on file hash for deduplication lookups
+          db.exec(`
+            CREATE INDEX idx_attachments_hash ON attachments(file_hash);
+          `);
+
+          console.log('Migration 002: Added filesystem storage columns to attachments table');
+        },
+      },
     ];
   }
 
@@ -354,6 +463,53 @@ export class DatabaseService {
     } catch (error) {
       console.error('Error checking database seed status:', error);
     }
+  }
+
+  /**
+   * Health check for database connection
+   */
+  public healthCheck(): { healthy: boolean; message: string } {
+    try {
+      // Simple query to test connection
+      this.db.prepare('SELECT 1').get();
+      return { healthy: true, message: 'Database connection healthy' };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return { healthy: false, message: `Database error: ${errorMessage}` };
+    }
+  }
+
+  /**
+   * Get database statistics
+   */
+  public getStats(): {
+    pageCount: number;
+    pageSize: number;
+    totalSize: number;
+    freelistCount: number;
+    wastedSpace: number;
+    fragmentation: number;
+  } {
+    const pageCount = (this.db.prepare('PRAGMA page_count').get() as { page_count: number })
+      .page_count;
+    const pageSize = (this.db.prepare('PRAGMA page_size').get() as { page_size: number })
+      .page_size;
+    const freelistCount = (
+      this.db.prepare('PRAGMA freelist_count').get() as { freelist_count: number }
+    ).freelist_count;
+
+    const totalSize = pageCount * pageSize;
+    const wastedSpace = freelistCount * pageSize;
+    const fragmentation = totalSize > 0 ? (wastedSpace / totalSize) * 100 : 0;
+
+    return {
+      pageCount,
+      pageSize,
+      totalSize,
+      freelistCount,
+      wastedSpace,
+      fragmentation,
+    };
   }
 
   public close(): void {
